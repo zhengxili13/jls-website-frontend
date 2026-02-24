@@ -1,10 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, merge } from 'rxjs';
-import { ShopService } from '../../shared/api/shop.service';
 import { Product } from '../../shared/interfaces/product';
-import { Category } from '../../shared/interfaces/category';
 import { BlockHeaderGroup } from '../../shared/interfaces/block-header-group';
-import { shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { StoreService } from 'src/app/shared/services/store.service';
 import { ProductService } from 'src/app/shared/api/product.service';
@@ -35,12 +33,12 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
 
     popularCategories$: any[];
 
-    columnTopRated$: Observable<Product[]>;
-    columnSpecialOffers$: Observable<Product[]>;
-    columnBestsellers$: Observable<Product[]>;
+    columnTopRated$!: Observable<Product[]>;
+    columnSpecialOffers$!: Observable<Product[]>;
+    columnBestsellers$!: Observable<Product[]>;
 
-    featuredProducts: ProductsCarouselData;
-    latestProducts: ProductsCarouselData;
+    featuredProducts!: ProductsCarouselData;
+    latestProducts!: ProductsCarouselData;
 
     constructor(
         public route: ActivatedRoute,
@@ -48,7 +46,6 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
         public productService: ProductService,
         public translateService: TranslateService
     ) {
-
     }
 
     ngOnInit(): void {
@@ -73,9 +70,10 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
 
         /* Not needed for jls version */
         if (!this.simplifyHomePage) {
-            var categoryList = this.storeService.categoryList.value.slice(0, 4);
-            var groups = [];
-            groups.push({
+            const featuredCategoryList = this.storeService.categoryList.value.slice(0, 4);
+            const featuredGroups: ProductsCarouselGroup[] = [];
+
+            featuredGroups.push({
                 name: "All",
                 current: true,
                 products$: this.productService.GetProductByPrice({
@@ -83,9 +81,10 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
                     Begin: 0,
                     Step: 8
                 })
-            })
-            categoryList.forEach(element => {
-                groups.push({
+            });
+
+            featuredCategoryList.forEach(element => {
+                featuredGroups.push({
                     name: element.Label,
                     current: false,
                     products$: this.productService.GetProductByPrice({
@@ -94,19 +93,22 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
                         Begin: 0,
                         Step: 8
                     }),
-                })
+                });
             });
 
             this.featuredProducts = {
                 abort$: new Subject<void>(),
                 loading: false,
                 products: [],
-                groups: groups
+                groups: featuredGroups
             };
             this.groupChange(this.featuredProducts, this.featuredProducts.groups[0]);
-            var categoryList = this.storeService.categoryList.value.slice(0, 4);
-            var groups = [];
-            groups.push({
+
+
+            const latestCategoryList = this.storeService.categoryList.value.slice(0, 4);
+            const latestGroups: ProductsCarouselGroup[] = [];
+
+            latestGroups.push({
                 name: "All",
                 current: true,
                 products$: this.productService.GetProductListByPublishDate({
@@ -114,9 +116,10 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
                     Begin: 0,
                     Step: 8
                 })
-            })
-            categoryList.forEach(element => {
-                groups.push({
+            });
+
+            latestCategoryList.forEach(element => {
+                latestGroups.push({
                     name: element.Label,
                     current: false,
                     products$: this.productService.GetProductListByPublishDate({
@@ -125,22 +128,22 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
                         Begin: 0,
                         Step: 8
                     }),
-                })
+                });
             });
+
             this.latestProducts = {
                 abort$: new Subject<void>(),
                 loading: false,
                 products: [],
-                groups: groups
+                groups: latestGroups
             };
             this.groupChange1(this.latestProducts, this.latestProducts.groups[0]);
         }
-
     }
 
 
     formatMegaMenu(): any[] {
-        var targetedCategory = this.storeService.categoryList.value.sort((a, b) => b.SecondCategory.length - a.SecondCategory.length);
+        const targetedCategory = this.storeService.categoryList.value.sort((a, b) => b.SecondCategory.length - a.SecondCategory.length);
         targetedCategory.filter(p => p.SecondCategory.length > 0);
         // Show all category for jls 
         //targetedCategory = targetedCategory.slice(0, 6);
@@ -170,6 +173,6 @@ export class PageHomeOneComponent implements OnInit, OnDestroy {
         group.products$.pipe(
             tap(() => carousel.loading = false),
             takeUntil(merge(this.destroy$, carousel.abort$)),
-        ).subscribe(x => { carousel.products = x });
+        ).subscribe((x: Product[]) => { carousel.products = x; });
     }
 }

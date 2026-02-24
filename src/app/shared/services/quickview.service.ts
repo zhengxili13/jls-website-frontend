@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Product, Product1 } from '../interfaces/product';
-import { Observable, Subject, timer } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { ProductService } from '../api/product.service';
 
@@ -16,13 +16,18 @@ export class QuickviewService implements OnDestroy {
     constructor(public productService: ProductService) { }
 
     show(product: Product1): Observable<void> {
-        var criteria:any = {
+        const userId = localStorage.getItem('userId');
+        const lang = localStorage.getItem('lang');
+
+        const criteria: any = {
             ProductId: product.ProductId,
-            Lang: localStorage.getItem('lang')
+            Lang: lang
         };
-        if(localStorage.getItem('userId')!=null){
-            criteria.UserId = localStorage.getItem('userId');
+
+        if (userId) {
+            criteria.UserId = userId;
         }
+
         return this.productService.GetProductById(criteria).pipe(map((result) => {
             this.showSubject$.next(result);
         }));

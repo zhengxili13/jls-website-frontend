@@ -1,4 +1,5 @@
-import { Component, Inject, NgZone, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, NgZone, OnInit, PLATFORM_ID, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from './shared/services/cart.service';
 import { WishlistService } from './shared/services/wishlist.service';
@@ -14,6 +15,8 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+    private destroyRef = inject(DestroyRef);
+
     constructor(
         @Inject(PLATFORM_ID) private platformId: any,
         private router: Router,
@@ -25,20 +28,25 @@ export class AppComponent implements OnInit {
         private currency: CurrencyService,
         private translate: TranslateService
     ) {
-        var lang = localStorage.getItem('lang');
-        lang != null ? translate.currentLang = lang : translate.currentLang = 'fr';
-        lang != null ? translate.setDefaultLang(lang) : translate.setDefaultLang('fr');
+        const lang = localStorage.getItem('lang') || 'fr';
+        this.translate.currentLang = lang;
+        this.translate.setDefaultLang(lang);
+
         if (isPlatformBrowser(this.platformId)) {
             this.zone.runOutsideAngular(() => {
-                this.router.events.pipe(filter(event => event instanceof NavigationEnd), first()).subscribe(() => {
+                this.router.events.pipe(
+                    filter(event => event instanceof NavigationEnd),
+                    first()
+                ).subscribe(() => {
                     const preloader = document.querySelector('.site-preloader');
-
-                    preloader.addEventListener('transitionend', (event: TransitionEvent) => {
-                        if (event.propertyName === 'opacity') {
-                            preloader.remove();
-                        }
-                    });
-                    preloader.classList.add('site-preloader__fade');
+                    if (preloader) {
+                        preloader.addEventListener('transitionend', (event: Event) => {
+                            if ((event as TransitionEvent).propertyName === 'opacity') {
+                                preloader.remove();
+                            }
+                        });
+                        preloader.classList.add('site-preloader__fade');
+                    }
                 });
             });
         }
@@ -55,15 +63,17 @@ export class AppComponent implements OnInit {
             locale: 'fr-FR'
         };
 
-        this.router.events.subscribe((event) => {
-            if ((event instanceof NavigationEnd)) {
+        this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+            if (event instanceof NavigationEnd) {
                 this.scroller.scrollToPosition([0, 0]);
             }
         });
-        this.cart.onAdding$.subscribe(product => {
+
+        this.cart.onAdding$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(product => {
             this.toastr.success(this.translate.instant("page-cart.Product") + " " + product.Label + " " + this.translate.instant("component.AddedToCart"));
         });
-        this.wishlist.onAdding$.subscribe(product => {
+
+        this.wishlist.onAdding$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.toastr.success(this.translate.instant("page-cart.Product") + " " + this.translate.instant("component.AddedToWishList"));
         });
     }

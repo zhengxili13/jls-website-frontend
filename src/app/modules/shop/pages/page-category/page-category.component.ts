@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Params, Router, NavigationEnd, ParamMap } from '@angular/router';
 import { ShopSidebarService } from '../../services/shop-sidebar.service';
 import { PageCategoryService } from '../../services/page-category.service';
@@ -24,14 +25,15 @@ import { StoreService } from 'src/app/shared/services/store.service';
         { provide: PageCategoryService1, useClass: PageCategoryService1 }
     ]
 })
-export class PageCategoryComponent implements OnDestroy {
+export class PageCategoryComponent implements OnInit, OnDestroy {
     destroy$: Subject<void> = new Subject<void>();
+    private destroyRef = inject(DestroyRef);
 
     columns: 3 | 4 | 5 = 3;
     viewMode: 'grid' | 'grid-with-features' | 'list' = 'grid';
     sidebarPosition: 'start' | 'end' = 'start'; // For LTR scripts "start" is "left" and "end" is "right"
     breadcrumbs: Link[] = [];
-    pageHeader: string;
+    pageHeader: string = '';
 
     constructor(
         private root: RootService,
@@ -42,13 +44,10 @@ export class PageCategoryComponent implements OnDestroy {
         private translateService: TranslateService,
         public storeService: StoreService
     ) {
-  
     }
 
-
     ngOnInit(): void {
-
-        this.route.data.subscribe(data => {
+        this.route.data.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(data => {
             this.breadcrumbs = [
                 { label: 'Page d\'accueil', url: this.root.home() },
                 { label: 'Catégories', url: this.root.shop() },
@@ -58,31 +57,29 @@ export class PageCategoryComponent implements OnDestroy {
             if (!this.getCategorySlug()) {
                 this.pageHeader = 'Catégories';
             } else {
-                this.pageHeader = data.category.name;
+                this.pageHeader = data['category']?.name || 'Catégories';
 
                 this.breadcrumbs = this.breadcrumbs.concat([
-                    ...data.category.parents.map(
-                        parent => ({ label: parent.name, url: this.root.category(parent) })
+                    ...(data['category']?.parents || []).map(
+                        (parent: any) => ({ label: parent.name, url: this.root.category(parent) })
                     ),
-                    { label: data.category.name, url: this.root.category(data.category) },
+                    { label: data['category']?.name, url: this.root.category(data['category']) },
                 ]);
             }
 
             /* Build category page */
-            this.columns = 'columns' in data ? data.columns : this.columns;
-            this.viewMode = 'viewMode' in data ? data.viewMode : this.viewMode;
-            this.sidebarPosition = 'sidebarPosition' in data ? data.sidebarPosition : this.sidebarPosition;
+            this.columns = 'columns' in data ? data['columns'] : this.columns;
+            this.viewMode = 'viewMode' in data ? data['viewMode'] : this.viewMode;
+            this.sidebarPosition = 'sidebarPosition' in data ? data['sidebarPosition'] : this.sidebarPosition;
         });
 
-
         this.pageService1.optionsChange$.pipe(
-
             mergeMap(() => {
-               // this.updateUrl();
+                // this.updateUrl();
                 this.pageService1.setIsLoading(true);
 
-                var criteria = this.pageService1.options;
-                criteria.Lang = this.translateService.currentLang || localStorage.getItem('lang');
+                const criteria = this.pageService1.options;
+                criteria.Lang = this.translateService.currentLang || localStorage.getItem('lang') || 'fr';
 
                 return this.productService.AdvancedProductSearchClient(
                     criteria
@@ -92,64 +89,62 @@ export class PageCategoryComponent implements OnDestroy {
             }),
             takeUntil(this.destroy$),
         ).subscribe(list => {
-
-            var formatedData = {
+            const formatedData = {
                 items: list.List,
                 TotalCount: list.TotalCount
-            }
+            };
 
             this.pageService1.setList(formatedData);
             this.pageService1.setIsLoading(false);
         });
-        
-        this.route.queryParamMap.subscribe((params: ParamMap) => {
-           // this.pageService1.resetAllOptions(false);
-            var criteria = this.pageService1.options;
 
+        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
+            const criteria = this.pageService1.options;
 
-            var categoryShortLabel = params.get('CategoryLabel');
-            if (categoryShortLabel != null && categoryShortLabel == "MainCategory") {
-                criteria.MainCategory = parseInt(params.get('ReferenceItemId'));
+            const categoryShortLabel = params.get('CategoryLabel');
+            if (categoryShortLabel === "MainCategory") {
+                criteria.MainCategory = parseInt(params.get('ReferenceItemId') || '0', 10);
                 criteria.SecondCategory = null;
-            }
-            else if (categoryShortLabel != null && categoryShortLabel == "SecondCategory") {
-                criteria.SecondCategory = parseInt(params.get('ReferenceItemId'));
+            } else if (categoryShortLabel === "SecondCategory") {
+                criteria.SecondCategory = parseInt(params.get('ReferenceItemId') || '0', 10);
                 criteria.MainCategory = null;
             }
-            var searchText = params.get('SearchText');
-            if(searchText!=null){
+
+            const searchText = params.get('SearchText');
+            if (searchText != null) {
                 criteria.SearchText = searchText;
             }
-            var orderby = params.get('Orderby');
-            if(orderby!=null){
+
+            const orderby = params.get('Orderby');
+            if (orderby != null) {
                 criteria.OrderBy = orderby;
             }
 
             /* Resert page to 0 when 1 of 3 criteria has been changed */
-            if(searchText!= null || categoryShortLabel!=null ){
+            if (searchText != null || categoryShortLabel != null) {
                 criteria.Begin = 0;
             }
-            
-            // TODO, add step 
-            var begin = params.get('Begin');
-            if(begin!=null){
-                criteria.Begin = parseInt(begin);
+
+            const begin = params.get('Begin');
+            if (begin != null) {
+                criteria.Begin = parseInt(begin, 10);
             }
 
-            var step = params.get('Step');
-            if(step!=null){
-                criteria.Step = parseInt(step);
+            const step = params.get('Step');
+            if (step != null) {
+                criteria.Step = parseInt(step, 10);
             }
 
             this.pageService1.setOptions(criteria, true);
         });
     }
+
     ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
     }
 
     getCategorySlug(): string | null {
-        return this.route.snapshot.params.categorySlug || this.route.snapshot.data.categorySlug || null;
+        return this.route.snapshot.params['categorySlug'] || this.route.snapshot.data['categorySlug'] || null;
     }
 }

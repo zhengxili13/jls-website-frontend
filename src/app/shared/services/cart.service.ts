@@ -2,7 +2,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Product, Product1 } from '../interfaces/product';
 import { CartItem } from '../interfaces/cart-item';
 import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { StoreService } from './store.service';
 
@@ -71,21 +71,12 @@ export class CartService {
         return timer(1000).pipe(map(() => {
             this.onAddingSubject$.next(product);
 
-            let item = this.items.find(eachItem => {
-                if (eachItem.product.ProductId !== product.ProductId) {
-                    return false;
-                }
-                return true;
-            });
-
-            // No neededs
-           // quantity = product.MinQuantity > quantity ? product.MinQuantity : quantity;
+            let item = this.items.find(eachItem => eachItem.product.ProductId === product.ProductId);
 
             if (item) {
-                item.quantity = item.quantity +quantity;
+                item.quantity += quantity;
             } else {
                 item = { product, quantity };
-
                 this.data.items.push(item);
             }
 
@@ -96,19 +87,16 @@ export class CartService {
         }));
     }
 
-    addMultiple(productList: any[]){
-        
-        if(productList!=null && productList.length >0 ){
-            productList.map(x=>{
-                var product = x.product;
-                var quantity = x.quantity;
+    addMultiple(productList: any[]) {
+        if (productList?.length) {
+            productList.forEach(x => {
+                const product = x.product;
+                const quantity = x.quantity;
 
-                let item = this.items.find(eachItem => {
-                   return eachItem.product.ProductId == product.ProductId;
-                });
+                let item = this.items.find(eachItem => eachItem.product.ProductId === product.ProductId);
 
                 if (item) {
-                    item.quantity = item.quantity + quantity;
+                    item.quantity += quantity;
                 } else {
                     item = { product, quantity };
                     this.data.items.push(item);
@@ -149,16 +137,14 @@ export class CartService {
     }
 
     clear() {
-        this.data.items = this.data.items.filter(p=>p.quantity<=0);
+        this.data.items = this.data.items.filter(p => p.quantity <= 0);
 
         this.save();
         this.calc();
     }
 
     private calc(): void {
-
-
-        this.storeService.taxRate.subscribe(result => {
+        this.storeService.taxRate.pipe(take(1)).subscribe(result => {
             let quantity = 0;
             let subtotal = 0;
 
@@ -194,7 +180,6 @@ export class CartService {
             this.totalsSubject$.next(this.data.totals);
             this.totalSubject$.next(this.data.total);
         });
-
     }
 
     private save(): void {

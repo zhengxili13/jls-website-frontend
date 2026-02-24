@@ -1,17 +1,20 @@
-import { Directive, ElementRef, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
+import { Subject, fromEvent } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 @Directive({
     selector: '[appFakeSlides]',
     exportAs: 'appFakeSlides'
 })
 export class FakeSlidesDirective implements OnInit, OnChanges, OnDestroy {
-    @Input() options;
+    @Input() options: any;
     @Input() appFakeSlides = 0;
 
-    private resizeHandler: () => void;
-
-    slides = [];
+    slides: number[] = [];
     slidesCount = 0;
+
+    private readonly destroy$ = new Subject<void>();
+    private readonly cdr = inject(ChangeDetectorRef);
 
     constructor(
         private zone: NgZone,
@@ -19,9 +22,17 @@ export class FakeSlidesDirective implements OnInit, OnChanges, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.resizeHandler = () => this.calc();
         this.zone.runOutsideAngular(() => {
-            window.addEventListener('resize', this.resizeHandler);
+            fromEvent(window, 'resize')
+                .pipe(
+                    debounceTime(150),
+                    takeUntil(this.destroy$)
+                )
+                .subscribe(() => {
+                    this.zone.run(() => {
+                        this.calc();
+                    });
+                });
         });
         this.calc();
     }
@@ -31,14 +42,15 @@ export class FakeSlidesDirective implements OnInit, OnChanges, OnDestroy {
 
         if (this.options) {
             let match = -1;
-            const viewport = this.el.nativeElement.querySelector('.owl-carousel').clientWidth;
+            const viewport = this.el.nativeElement.querySelector('.owl-carousel')?.clientWidth || 0;
             const overwrites = this.options.responsive;
 
             if (overwrites) {
                 for (const key in overwrites) {
-                    if (overwrites.hasOwnProperty(key)) {
-                        if (+key <= viewport && +key > match) {
-                            match = Number(key);
+                    if (Object.prototype.hasOwnProperty.call(overwrites, key)) {
+                        const numKey = Number(key);
+                        if (numKey <= viewport && numKey > match) {
+                            match = numKey;
                         }
                     }
                 }
@@ -53,22 +65,20 @@ export class FakeSlidesDirective implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.slidesCount !== newFakeSlidesCount) {
-            this.slides = [];
+            this.slides = Array.from({ length: newFakeSlidesCount }, (_, i) => i);
             this.slidesCount = newFakeSlidesCount;
-
-            for (let i = 0; i < newFakeSlidesCount; i++) {
-                this.slides.push(i);
-            }
+            this.cdr.markForCheck();
         }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.calc();
+        if (changes['options'] || changes['appFakeSlides']) {
+            this.calc();
+        }
     }
 
     ngOnDestroy(): void {
-        if (this.resizeHandler) {
-            window.removeEventListener('resize', this.resizeHandler);
-        }
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

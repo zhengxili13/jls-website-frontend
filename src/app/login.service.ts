@@ -15,7 +15,8 @@ declare const Configuration: any;
 })
 export class LoginService {
     public loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus());
-    private baseUrlToken: string = Configuration.SERVER_API_URL + 'api/Token/Auth';
+    private baseUrlToken: string = Configuration?.SERVER_API_URL ? Configuration.SERVER_API_URL + 'api/Token/Auth' : '';
+
     constructor(
         @Inject(PLATFORM_ID)
         private platformId: any,
@@ -44,12 +45,11 @@ export class LoginService {
     logout() {
         // Set Loginstatus to false and delete saved jwt cookie
         this.loginStatus.next(false);
-        var lang = localStorage.getItem('lang');
+        const lang = localStorage.getItem('lang') || 'fr';
         localStorage.clear();
         localStorage.setItem('lang', lang);
         this.router.navigate(['']);
         return;
-
     }
 
 
@@ -61,7 +61,7 @@ export class LoginService {
 
         return this.httpClient.post<any>(this.baseUrlToken, { username, refreshToken, grantType }).pipe(
             map(result => {
-                if (result && result.authToken.token) {
+                if (result?.authToken?.token) {
                     this.loginStatus.next(true);
                     localStorage.setItem('loginStatus', '1');
                     localStorage.setItem('jwt', result.authToken.token);
@@ -75,19 +75,18 @@ export class LoginService {
 
             }, catchError(err => {
                 this.logout();
-                return throwError(err);
+                return throwError(() => err);
             }))
         );
 
     }
 
-
     checkLoginStatus(): boolean {
+        const loginCookie = localStorage.getItem("loginStatus");
 
-        var loginCookie = localStorage.getItem("loginStatus");
-
-        if (loginCookie == "1") {
-            if (localStorage.getItem('jwt') != null || localStorage.getItem('jwt') != undefined) {
+        if (loginCookie === "1") {
+            const jwt = localStorage.getItem('jwt');
+            if (jwt != null && jwt !== undefined && jwt !== '') {
                 return true;
             }
         }

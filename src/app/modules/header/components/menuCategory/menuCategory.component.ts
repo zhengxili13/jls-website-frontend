@@ -9,9 +9,7 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { NestedLink } from '../../../../shared/interfaces/nested-link';
 import { DirectionService } from '../../../../shared/services/direction.service';
-import { NavigationLink } from '../../../../shared/interfaces/navigation-link';
 import { Category } from 'src/app/shared/interfaces/selfDefinedIntefaces/Category';
 
 @Component({
@@ -25,11 +23,11 @@ export class MenuCategoryComponent implements AfterViewChecked {
 
     @Output() itemClick: EventEmitter<Category> = new EventEmitter<Category>();
 
-    @ViewChild('menuElement') elementRef: ElementRef;
-    @ViewChildren('submenuElement') submenuElements: QueryList<ElementRef>;
-    @ViewChildren('itemElement') itemElements: QueryList<ElementRef>;
+    @ViewChild('menuElement') elementRef!: ElementRef;
+    @ViewChildren('submenuElement') submenuElements!: QueryList<ElementRef>;
+    @ViewChildren('itemElement') itemElements!: QueryList<ElementRef>;
 
-    hoveredItem: Category = null;
+    hoveredItem: Category | null = null;
     reCalcSubmenuPosition = false;
 
     get element(): HTMLDivElement {
@@ -43,7 +41,6 @@ export class MenuCategoryComponent implements AfterViewChecked {
     onItemMouseEnter(item: Category): void {
         if (this.hoveredItem !== item) {
             this.hoveredItem = item;
-
         }
     }
 
@@ -51,7 +48,7 @@ export class MenuCategoryComponent implements AfterViewChecked {
         this.hoveredItem = null;
     }
 
-    onTouchClick(event, item: Category): void {
+    onTouchClick(event: Event, item: Category): void {
         if (event.cancelable) {
             if (this.hoveredItem && this.hoveredItem === item) {
                 return;
@@ -73,6 +70,10 @@ export class MenuCategoryComponent implements AfterViewChecked {
 
         const itemElement = this.getCurrentItemElement();
         const submenuElement = this.getCurrentSubmenuElement();
+
+        if (!itemElement || !submenuElement) {
+            return;
+        }
 
         const menuRect = this.element.getBoundingClientRect();
         const itemRect = itemElement.getBoundingClientRect();
@@ -98,16 +99,14 @@ export class MenuCategoryComponent implements AfterViewChecked {
 
         if (this.direction.isRTL()) {
             const submenuLeft = menuRect.left - submenuRect.width;
-
             submenuElement.classList.toggle('menu__submenu--reverse', submenuLeft < 0);
         } else {
             const submenuRight = menuRect.left + menuRect.width + submenuRect.width;
-
             submenuElement.classList.toggle('menu__submenu--reverse', submenuRight > document.body.clientWidth);
         }
     }
 
-    getCurrentItemElement(): HTMLDivElement {
+    getCurrentItemElement(): HTMLDivElement | null {
         if (!this.hoveredItem) {
             return null;
         }
@@ -122,18 +121,27 @@ export class MenuCategoryComponent implements AfterViewChecked {
         return elements[index].nativeElement as HTMLDivElement;
     }
 
-    getCurrentSubmenuElement(): HTMLDivElement {
-        if (!this.hoveredItem) {
+    getCurrentSubmenuElement(): HTMLDivElement | null {
+        if (!this.hoveredItem?.CategoryId) {
             return null;
         }
 
-        const index = this.items.filter(x => x.CategoryId).indexOf(this.hoveredItem);
+        let submenuIndex = 0;
+        for (let i = 0; i < this.items.length; i++) {
+            const item = this.items[i];
+            if (item === this.hoveredItem) {
+                break;
+            }
+            if (item.CategoryId) {
+                submenuIndex++;
+            }
+        }
+
         const elements = this.submenuElements.toArray();
-
-        if (index === -1 || !elements[index]) {
+        if (submenuIndex === -1 || !elements[submenuIndex]) {
             return null;
         }
 
-        return elements[index].nativeElement as HTMLDivElement;
+        return elements[submenuIndex].nativeElement as HTMLDivElement;
     }
 }

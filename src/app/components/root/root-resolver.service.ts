@@ -9,7 +9,6 @@ import { RootService } from 'src/app/shared/services/root.service';
 import { ReferenceService } from 'src/app/shared/api/reference.service';
 import { ProductService } from 'src/app/shared/api/product.service';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -23,22 +22,25 @@ export class RootResolverService implements Resolve<any> {
     ) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        var lang = localStorage.getItem('lang');
-        if(lang==null){
-            localStorage.setItem('lang',this.translateService.defaultLang);
+        let lang = localStorage.getItem('lang');
+
+        if (!lang) {
+            lang = this.translateService.defaultLang || 'fr';
+            localStorage.setItem('lang', lang);
         }
-        return forkJoin(
+
+        return forkJoin([
             this.referenceService.GetReferenceItemsByCategoryLabels({
-                Lang: localStorage.getItem('lang'),
-                ShortLabels: ['StoreInfomation','TaxRate','InAppMessage']
+                Lang: lang,
+                ShortLabels: ['StoreInfomation', 'TaxRate', 'InAppMessage']
             }),
             this.productService.GetCategoryForWebSite({
                 NumberOfCateogry: -1,
-                Lang: localStorage.getItem('lang')
+                Lang: lang
             }),
             this.referenceService.GetWbesiteslides(),
             this.referenceService.GetAllCategoryList()
-        ).pipe(
+        ]).pipe(
             catchError(error => {
                 if (error instanceof HttpErrorResponse && error.status === 404) {
                     this.router.navigate([this.root.notFound()]).then();

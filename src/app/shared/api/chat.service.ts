@@ -8,7 +8,7 @@ declare const Configuration: any;
 
 @Injectable()
 export class ChatService {
-    public host: string = Configuration.SERVER_API_URL;
+    public host: string = Configuration?.SERVER_API_URL || '';
 
     private apiUrlMessageHub = this.host + 'MessageHub'
     private apiUrlGetNoReadedDialogClient = this.host + 'api/User/GetNoReadedDialogClient';
@@ -20,7 +20,7 @@ export class ChatService {
     connectionEstablished = new EventEmitter<Boolean>();
 
     private connectionIsEstablished = false;
-    private _hubConnection: HubConnection;
+    private _hubConnection!: HubConnection;
 
     constructor(private http: HttpClient) {
         this.createConnection();
@@ -28,23 +28,25 @@ export class ChatService {
         this.startConnection();
     }
 
-    GetNoReadedDialogClient(criteria): Observable<any> {
-        let params = new HttpParams({ fromObject: criteria });
+    GetNoReadedDialogClient(criteria: any): Observable<any> {
+        const params = new HttpParams({ fromObject: criteria });
         return this.http.get(this.apiUrlGetNoReadedDialogClient, { params });
     }
 
-    UpdateReadedDialog(criteria): Observable<any> {
-        let params = new HttpParams({ fromObject: criteria });
+    UpdateReadedDialog(criteria: any): Observable<any> {
+        const params = new HttpParams({ fromObject: criteria });
         return this.http.get(this.apiUrlUpdateReadedDialog, { params });
     }
 
-    GetChatDialog(criteria): Observable<any> {
-        let params = new HttpParams({ fromObject: criteria });
+    GetChatDialog(criteria: any): Observable<any> {
+        const params = new HttpParams({ fromObject: criteria });
         return this.http.get(this.apiUrlGetChatDialog, { params });
     }
 
     sendMessage(message: Message) {
-        this._hubConnection.invoke('NewMessage', message);
+        if (this._hubConnection) {
+            this._hubConnection.invoke('NewMessage', message);
+        }
     }
 
     private createConnection() {
@@ -54,24 +56,27 @@ export class ChatService {
     }
 
     private startConnection(): void {
-        this._hubConnection
-            .start()
-            .then(() => {
-                this.connectionIsEstablished = true;
-                this.connectionEstablished.emit(true);
-            })
-            .catch(err => {
-                setTimeout(function () { this.startConnection(); }, 5000);
-            });
+        if (this._hubConnection) {
+            this._hubConnection
+                .start()
+                .then(() => {
+                    this.connectionIsEstablished = true;
+                    this.connectionEstablished.emit(true);
+                })
+                .catch(err => {
+                    setTimeout(() => { this.startConnection(); }, 5000);
+                });
+        }
     }
 
     private registerOnServerEvents(): void {
-        this._hubConnection.on('MessageReceived', (data: any) => {
-            var uniqueID = parseInt(localStorage.getItem('userId'));
-            if (data.clientuniqueid !== uniqueID && data.toUser == uniqueID) {
-                this.messageReceived.emit(data);
-            }
-
-        });
+        if (this._hubConnection) {
+            this._hubConnection.on('MessageReceived', (data: any) => {
+                const uniqueID = parseInt(localStorage.getItem('userId') || '0', 10);
+                if (data.clientuniqueid !== uniqueID && data.toUser === uniqueID) {
+                    this.messageReceived.emit(data);
+                }
+            });
+        }
     }
-}    
+}

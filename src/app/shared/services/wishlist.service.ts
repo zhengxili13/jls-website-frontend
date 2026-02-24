@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
 import { Product, Product1 } from '../interfaces/product';
-import { map, takeUntil, retry } from 'rxjs/operators';
+import { map, takeUntil, take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { ProductService } from '../api/product.service';
 
@@ -18,7 +18,7 @@ export class WishlistService implements OnDestroy {
     };
 
     private destroy$: Subject<void> = new Subject();
-    private itemsSubject$: BehaviorSubject<Product[]> = new BehaviorSubject([]);
+    private itemsSubject$: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
     private onAddingSubject$: Subject<number> = new Subject();
 
     readonly items$: Observable<Product[]> = this.itemsSubject$.pipe(takeUntil(this.destroy$));
@@ -26,8 +26,8 @@ export class WishlistService implements OnDestroy {
     readonly onAdding$: Observable<number> = this.onAddingSubject$.asObservable();
 
     public numberOfFavoirteProduct$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-
     public FavoirteProductList$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
+
     constructor(
         @Inject(PLATFORM_ID)
         private platformId: any,
@@ -39,21 +39,20 @@ export class WishlistService implements OnDestroy {
     }
 
     addOrRemove(productId: number, IsFavorite: boolean): Observable<void> {
-        
-        var numberOfFavoirteProduct = this.numberOfFavoirteProduct$.value;
-        var FavoirteProductList = this.FavoirteProductList$.value;
+        const numberOfFavoirteProduct = this.numberOfFavoirteProduct$.value;
+        let FavoirteProductList = [...this.FavoirteProductList$.value];
+
         if (IsFavorite) {
             this.onAddingSubject$.next(productId);
-            if(FavoirteProductList.findIndex(p=>p==productId)==-1){
+            if (!FavoirteProductList.includes(productId)) {
                 this.numberOfFavoirteProduct$.next(numberOfFavoirteProduct + 1);
                 FavoirteProductList.push(productId);
                 this.FavoirteProductList$.next(FavoirteProductList);
             }
-        }
-        else{
-            if(FavoirteProductList.findIndex(p=>p==productId)!=-1){
+        } else {
+            if (FavoirteProductList.includes(productId)) {
                 this.numberOfFavoirteProduct$.next(numberOfFavoirteProduct - 1);
-                FavoirteProductList = FavoirteProductList.filter(p=>p != productId);
+                FavoirteProductList = FavoirteProductList.filter(p => p !== productId);
                 this.FavoirteProductList$.next(FavoirteProductList);
             }
         }
@@ -65,19 +64,21 @@ export class WishlistService implements OnDestroy {
         });
     }
 
-
     loadUserFavoriteList(): void {
-        if (localStorage.getItem('userId') != null) {
-            this.productService.GetFavoriteListByUserId({ UserId: localStorage.getItem('userId'), Lang: localStorage.getItem('lang') }).subscribe(result => {
-                if (result != null) {
-                    var listProductId = [];
-                    result.map(p=>listProductId.push(p.ProductId));
-                    this.FavoirteProductList$.next(listProductId);
-                    this.numberOfFavoirteProduct$.next(result.length);
-                }
-            });
-        }
+        const userId = localStorage.getItem('userId');
+        const lang = localStorage.getItem('lang');
 
+        if (userId) {
+            this.productService.GetFavoriteListByUserId({ UserId: userId, Lang: lang })
+                .pipe(take(1), takeUntil(this.destroy$))
+                .subscribe(result => {
+                    if (result?.length) {
+                        const listProductId = result.map((p: any) => p.ProductId);
+                        this.FavoirteProductList$.next(listProductId);
+                        this.numberOfFavoirteProduct$.next(result.length);
+                    }
+                });
+        }
     }
 
     remove(product: Product): Observable<void> {
@@ -94,7 +95,6 @@ export class WishlistService implements OnDestroy {
 
     private save(): void {
         localStorage.setItem('wishlistItems', JSON.stringify(this.data.items));
-
         this.itemsSubject$.next(this.data.items);
     }
 
