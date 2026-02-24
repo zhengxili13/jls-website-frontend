@@ -6,7 +6,7 @@ import { /*LOCALE_ID, */LOCALE_ID, NgModule } from '@angular/core';
 
 // modules (angular)
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // modules (third-party)
@@ -91,7 +91,8 @@ export function createTranslateLoader(http: HttpClient) {
         { provide: LOCALE_ID, useValue: 'fr-FR'}, 
         {provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true},
         // { provide: LOCALE_ID, useValue: 'it' }
-        RootResolverService
+        RootResolverService,
+        provideClientHydration()
     ],
     bootstrap: [AppComponent]
 })
