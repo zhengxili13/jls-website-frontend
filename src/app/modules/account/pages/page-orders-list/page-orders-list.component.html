@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="card-header">
+        <h5>{{'page-orders-list.Order' | translate}}</h5>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-table">
+        <div class="table-responsive-sm">
+            <table>
+                <thead>
+                <tr>
+                    <th>{{'page-orders-list.Order' | translate}}</th>
+                    <th>{{'page-orders-list.Date' | translate}}</th>
+                    <th>{{'page-orders-list.Order' | translate}}</th>
+                    <th>{{'page-orders-list.Order' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let order of orders">
+                    <td><a [routerLink]="['/account/order']" [queryParams]="{OrderId: order.Id }">#{{ order.Id }}</a></td>
+                    <td>{{ order.CreatedOn  | date:'short'}}</td>
+                    <td>{{ order.StatusLabel }}</td>
+                    <td>{{ order.TotalPrice|currencyFormat }} {{'page-dashboard.for' | translate}} {{ order.NumberOfProduct }} {{'page-dashboard.item' | translate}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

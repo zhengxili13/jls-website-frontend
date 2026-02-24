@@ -1,0 +1,22 @@
+<app-page-header [header]="'Mon compte'" [breadcrumbs]="[
+    {label: 'Page d\'accueil',       url: '/'},
+    {label: 'Mon compte', url: ''}
+]"></app-page-header>
+
+<div class="block order-success">
+    <div class="container">
+        <div class="order-success__body">
+            <div class="order-success__header">
+                <!-- <app-icon class="order-success__icon" name="check-100" size="100"></app-icon> -->
+                <div style="padding-right: 50px;"><mat-icon style="font-size: 100px;color: #1c931c;">check_circle</mat-icon></div>
+                
+                <h1 class="order-success__title">{{'page-order-success.EmailIsSended' | translate}}</h1>
+                <div class="order-success__subtitle">{{Message}} </div>
+                <div class="order-success__actions">
+                    <a routerLink="/"
+                        class="btn btn-xs btn-secondary">{{'page-order-success.GoToHomepage' | translate}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

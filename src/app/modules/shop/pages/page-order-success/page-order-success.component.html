@@ -1,0 +1,145 @@
+<div class="block order-success">
+    <div class="container">
+        <div class="order-success__body">
+            <div class="order-success__header">
+                <!-- <app-icon class="order-success__icon" name="check-100" size="100"></app-icon> -->
+                <div style="padding-right: 50px;"><mat-icon style="font-size: 100px;color: #1c931c;">check_circle</mat-icon></div>
+             
+                <h1 class="order-success__title">{{'page-order-success.Thankyou' | translate}}</h1>
+                <div class="order-success__subtitle">{{'page-order-success.Yourorderhasbeenreceived' | translate}}</div>
+                <div class="order-success__actions">
+                    <a routerLink="/" class="btn btn-xs btn-secondary">{{'page-order-success.GoToHomepage' | translate}}</a>
+                </div>
+            </div>
+
+            <div class="order-success__meta">
+                <ul class="order-success__meta-list">
+                    <li class="order-success__meta-item">
+                        <span class="order-success__meta-title">{{'page-order-success.Ordernumber' | translate}}:</span>
+                        <span class="order-success__meta-value">#{{ order.OrderInfo.Id  }}</span>
+                    </li>
+                    <li class="order-success__meta-item">
+                        <span class="order-success__meta-title">{{'page-order-success.Createdat' | translate}}:</span>
+                        <span class="order-success__meta-value">{{ order.OrderInfo.CreatedOn| date:'short' }}</span>
+                    </li>
+                    <li class="order-success__meta-item">
+                        <span class="order-success__meta-title">{{'page-order-success.Total' | translate}}:</span>
+                        <span class="order-success__meta-value">{{ order.OrderInfo.TotalPrice|currencyFormat }}</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="order-list">
+                    <table>
+                        <thead class="order-list__header">
+                        <tr>
+                            <th class="order-list__column-label" colspan="2">{{'page-order-success.Product' | translate}}</th>
+                            <th class="order-list__column-label">{{'page-cart.Reference' | translate}}</th>
+                            <th class="order-list__column-quantity">{{'product.QuantityPerParcel' | translate}}</th>
+                            <th class="order-list__column-quantity">{{'page-order-success.Qty' | translate}}</th>
+                            <th class="order-list__column-quantity">{{'page-cart.TotalQuantity' | translate}}</th>
+                            <th class="order-list__column-total">{{'page-order-details.UnitPrice' | translate}}</th>
+                            <th class="order-list__column-total">{{'page-order-success.Total' | translate}}</th>
+                        </tr>
+                        </thead>
+                        <tbody class="order-list__products">
+                        <tr *ngFor="let item of order.ProductList">
+                            <td class="order-list__column-image">
+                                <a appClick  *ngIf="item.DefaultPhotoPath" [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }"><img [src]="item.DefaultPhotoPath" alt="" ></a>
+                                <a appClick  *ngIf="!item.DefaultPhotoPath" [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }"><img src="assets/images/products/product-7.jpg" alt=""></a> 
+                            </td>
+                            <td class="order-list__column-product">
+                                <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }">
+                                    {{item.Label}}
+                                </a>
+                            </td>
+
+                            <td class="order-list__column-product">
+                                <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }">
+                                    {{item.Code}}
+                                </a>
+                            </td>
+                            <td class="order-list__column-quantity" >{{ item.QuantityPerBox }}</td>
+                            <td class="order-list__column-quantity" data-title="Qty:">{{ item.Quantity }}</td>
+                            <td class="order-list__column-quantity" >{{ item.QuantityPerBox *  item.Quantity}}</td>
+                            <td class="order-list__column-quantity" >{{ item.Price |currencyFormat}}</td>
+                            <td class="order-list__column-total">{{ (item.Price*item.Quantity*item.QuantityPerBox) |currencyFormat }} </td>
+                        </tr>
+                        </tbody>
+                        <tbody class="order-list__subtotals">
+                        <tr>
+                            <th class="order-list__column-label" colspan="7">{{'page-order-success.Subtotal' | translate}}</th>
+                            <td class="order-list__column-total">{{ (order.OrderInfo.TotalPrice - 0.01* taxRate* order.OrderInfo.TotalPrice/(1 + 0.01* taxRate) ) |currencyFormat }}</td>
+                        </tr>
+                        <tr>
+                            <th class="order-list__column-label" colspan="7">{{'page-order-success.TxTAX' | translate}}</th>
+                            <td class="order-list__column-total">{{ taxRate }}%</td>
+                        </tr>
+                        <tr>
+                            <th class="order-list__column-label" colspan="7">{{'page-order-details.Tax' | translate}}</th>
+                            <td class="order-list__column-total"> {{  0.01* taxRate* order.OrderInfo.TotalPrice/(1 + 0.01* taxRate)  |currencyFormat }}</td>
+                        </tr>
+                        </tbody>
+                        <tfoot class="order-list__footer">
+            
+                        <tr>
+                            <th class="order-list__column-label" colspan="7">{{'page-order-details.Total' | translate}}</th>
+                            <td class="order-list__column-total">{{ order.OrderInfo.TotalPrice|currencyFormat }}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-3 no-gutters mx-n2">
+                <div class="col-sm-6 col-12 px-2">
+                    <div class="card address-card">
+                        <div class="address-card__body">
+                            <div class="address-card__badge address-card__badge--muted">{{'page-order-success.ShippingAddress' | translate}}</div>
+                            <div class="address-card__name" style="margin-bottom:0">{{'page-order-details.EntrepriseName' | translate}}: </div>
+                            <div class="address-card__name">{{ order.ShippingAdress.EntrepriseName }}</div>
+                            <div class="address-card__row">
+                                {{ order.ShippingAdress.FirstLineAddress }}<br>
+                                {{ order.ShippingAdress.SecondLineAddress }}<br>
+                                {{ order.ShippingAdress.ZipCode }}, {{ order.ShippingAdress.City }}<br>
+                                {{  order.ShippingAdress.Country }}
+                            </div>
+                            <div class="address-card__row">
+                                <div class="address-card__row-title">{{'page-order-success.PhoneNumber' | translate}}</div>
+                                <div class="address-card__row-content">{{ order.ShippingAdress.ContactTelephone }}</div>
+                            </div>
+                            <!-- <div class="address-card__row">
+                                <div class="address-card__row-title">{{'page-order-details.EntrepriseName' | translate}}</div>
+                                <div class="address-card__row-content">{{ order.ShippingAdress.EntrepriseName }}</div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-12 px-2 mt-sm-0 mt-3">
+                    <div class="card address-card">
+                        <div class="address-card__body">
+                            <div class="address-card__badge address-card__badge--muted">{{'page-order-success.BillingAddress' | translate}}</div>
+                            <div class="address-card__name" style="margin-bottom:0">{{'page-order-details.EntrepriseName' | translate}}:</div>
+                            <div class="address-card__name">{{ order.FacturationAdress.EntrepriseName }}</div>
+                            <div class="address-card__row">
+                                {{ order.FacturationAdress.FirstLineAddress }}<br>
+                                {{ order.FacturationAdress.SecondLineAddress }}<br>
+                                {{ order.FacturationAdress.ZipCode }}, {{ order.ShippingAdress.City }}<br>
+                                {{ order.FacturationAdress.Country }}
+                            </div>
+                            <div class="address-card__row">
+                                <div class="address-card__row-title">{{'page-order-success.PhoneNumber' | translate}}</div>
+                                <div class="address-card__row-content">{{ order.FacturationAdress.ContactTelephone }}</div>
+                            </div>
+                            <!-- <div class="address-card__row">
+                                <div class="address-card__row-title">{{'page-order-details.EntrepriseName' | translate}}</div>
+                                <div class="address-card__row-content">{{ order.FacturationAdress.EntrepriseName }}</div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

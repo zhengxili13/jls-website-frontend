@@ -1,0 +1,39 @@
+<div class="site-footer">
+    <div class="container">
+        <div class="site-footer__widgets">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <app-footer-contacts></app-footer-contacts>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <app-footer-links header="components.Information" [links]="[
+                        {label: 'components.AboutUs',             url: '/site/about-us'},
+                        {label: 'components.DeliveryInformation', url: '/site/livraison'},
+                        {label: 'components.PrivacyPolicy',       url: '/site/terms'},
+                        {label: 'components.ContactUs',           url: '/site/contact-us'}
+                    ]"></app-footer-links>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <app-footer-links header="components.MyAccount" [links]="[
+                        {label: 'components.StoreLocation', url: ''},
+                        {label: 'components.History',  url: ''},
+                        {label: 'components.WishList',      url: '/shop/wishlist'},
+                        {label: 'components.ExportAll',     url: '', action: 'export'}
+                    ]"></app-footer-links>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                    <app-footer-newsletter class="site-footer__widget"></app-footer-newsletter>
+                </div>
+            </div>
+        </div>
+
+        <div class="site-footer__bottom">
+            <div class="site-footer__copyright">
+                © 2020 jls.fr. Tous droits réservés. {{'newsletter.Designby' | translate}}: <a href="https://angular.io/" target="_blank">EUROPE TECHS</a>
+            </div>
+            <div class="site-footer__payments">
+               
+            </div>
+        </div>
+    </div>
+</div>

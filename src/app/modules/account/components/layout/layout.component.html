@@ -1,0 +1,25 @@
+<app-page-header [header]="'Mon compte'" [breadcrumbs]="[
+    {label: 'Page d\'accueil',       url: '/'},
+    {label: 'Mon compte', url: ''}
+]"></app-page-header>
+
+<div class="block">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-3 d-flex">
+                <div class="account-nav flex-grow-1">
+                    <h4 class="account-nav__title">{{'Navigation' | translate}}</h4>
+                    <ul>
+                        <li *ngFor="let link of links" class="account-nav__item" routerLinkActive="account-nav__item--active" [routerLinkActiveOptions]="{exact: true}">
+                            <a [routerLink]="link.url" [queryParams]="link.params" *ngIf="link.type==null || link.type!='logout'">{{ link.label | translate }}</a>
+                            <a (click)="logout()" style="cursor: pointer;" *ngIf="link.type!=null && link.type=='logout'">{{ link.label | translate }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-12 col-lg-9 mt-4 mt-lg-0">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

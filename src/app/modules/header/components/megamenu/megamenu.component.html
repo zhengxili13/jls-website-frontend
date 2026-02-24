@@ -1,0 +1,24 @@
+<!-- .megamenu -->
+<div class="megamenu">
+    <div class="megamenu__body" [style.background-image]="menu.image ? 'url('+menu.image+')' : ''">
+        <div class="row">
+            <div *ngFor="let column of menu.columns" class="col-4">
+                <ul class="megamenu__links megamenu__links--level--0">
+                    <li *ngFor="let item of column.items" class="megamenu__item" [ngClass]="{'megamenu__item--with-submenu': item.SecondCategory}">
+
+                        <a  [routerLink]="['/shop/catalog']" [queryParams]="{CategoryLabel: item.CategoryShortLabel , ReferenceItemId: item.Id}" (click)="itemClick.emit(item)">{{ item.Label }}</a>
+
+                        <ul *ngIf="item.SecondCategory" class="megamenu__links megamenu__links--level--1">
+                            <li *ngFor="let subItem of item.SecondCategory" class="megamenu__item">
+
+                                <a  [routerLink]="['/shop/catalog']" [queryParams]="{CategoryLabel: subItem.CategoryShortLabel , ReferenceItemId: subItem.Id}" (click)="itemClick.emit(subItem)">{{ subItem.Label }}</a>
+
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- .megamenu / end -->

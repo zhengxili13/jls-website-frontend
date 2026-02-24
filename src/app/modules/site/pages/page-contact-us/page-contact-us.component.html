@@ -1,0 +1,73 @@
+<app-block-map></app-block-map>
+
+<app-page-header [header]="'Contacter-nous'" [breadcrumbs]="[
+    {label: 'Page d\'accueil',       url: '../../'},
+    {label: 'Contacter-nous', url: ''}
+]"></app-page-header>
+
+<div class="block">
+    <div class="container">
+        <div class="card mb-0">
+            <div class="card-body contact-us">
+                <div class="contact-us__container">
+                    <div class="row">
+                        <div class="col-12 col-lg-6 pb-4 pb-lg-0">
+                            <h4 class="contact-us__header card-title">{{'page-contact-us.OurAddress' | translate}}</h4>
+
+                            <div class="contact-us__address">
+                                <p>
+                                    {{storeService.address}} <br>
+                                    {{'page-contact-us.PhoneNumber' | translate}}: {{storeService.phone}}<br>
+                                    {{'page-contact-us.Fax' | translate}}: {{storeService.fax}} <br>
+                                    {{'page-contact-us.Email' | translate}}: {{storeService.email}}
+                                </p>
+
+                                <p>
+                                    <strong>{{'page-contact-us.OpeningHours' | translate}}</strong> : {{storeService.hours}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <h4 class="contact-us__header card-title">{{'page-contact-us.LeaveusaMessage' | translate}}
+                            </h4>
+
+                            <form [formGroup]="MessageForm">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="form-name">{{'page-contact-us.YourName' | translate}}</label>
+                                        <input formControlName="Name" type="text" id="form-name" class="form-control"
+                                            placeholder="{{'page-contact-us.YourName' | translate}}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="form-email">{{'page-contact-us.Email' | translate}} <span style="color: red;">*</span> </label>
+                                        <input formControlName="Email" type="email" id="form-email" class="form-control"
+                                            placeholder="{{'page-contact-us.Email' | translate}}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-subject">{{'page-contact-us.Subject' | translate}}<span style="color: red;">*</span></label>
+                                    <input formControlName="Title" type="text" id="form-subject" class="form-control"
+                                        placeholder="{{'page-contact-us.Subject' | translate}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-message">{{'page-contact-us.Message' | translate}}</label>
+                                    <textarea formControlName="Body" id="form-message" class="form-control"
+                                        rows="4"></textarea>
+                                </div>
+
+                                <div class="alert alert-danger" role="alert" *ngIf="showErrorMessage">{{'imcomplete' | translate}}</div>
+                                <button (click)="submitMessage()"
+                                    class="btn btn-primary">{{'page-contact-us.SendMessage' | translate}}</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>

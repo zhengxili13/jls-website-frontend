@@ -1,0 +1,15 @@
+﻿src/app/app-routing.module.ts(56,9): error TS2322: Type '"enabled"' is not assignable to type 'InitialNavigation'.
+src/app/modules/header/components/departments/departments.component.ts(158,23): error TS2554: Expected 1 arguments, but got 0.
+src/app/modules/header/components/indicator/indicator.component.ts(91,23): error TS2554: Expected 1 arguments, but got 0.
+src/app/modules/header/components/menuCategory/menuCategory.component.ts(15,26): error TS1149: File name 'C:/Dev/JLSWebSite/src/app/shared/interfaces/selfDefinedIntefaces/Category.ts' differs from already included file name 'C:/Dev/JLSWebSite/src/app/shared/interfaces/selfDefinedIntefaces/category.ts' only in casing.
+  The file is in the program because:
+    Imported via 'src/app/shared/interfaces/selfDefinedIntefaces/category' from file 'C:/Dev/JLSWebSite/src/app/modules/header/components/departments/departments.component.ts'
+    Imported via 'src/app/shared/interfaces/selfDefinedIntefaces/Category' from file 'C:/Dev/JLSWebSite/src/app/modules/header/components/menuCategory/menuCategory.component.ts'
+src/app/modules/mobile/components/mobile-menu/mobile-menu.component.ts(59,23): error TS2554: Expected 1 arguments, but got 0.
+src/app/modules/shop/services/page-category.service.ts(22,96): error TS2729: Property 'listState' is used before its initialization.
+src/app/shared/components/input-number/input-number.component.ts(70,17): error TS2365: Operator '>' cannot be applied to types 'number' and 'string | number'.
+src/app/shared/components/product/product.component.ts(8,36): error TS2307: Cannot find module 'ngx-owl-carousel-o/lib/carousel/owl-carousel-o-config' or its corresponding type declarations.
+src/app/shared/directives/click.directive.ts(68,23): error TS2554: Expected 1 arguments, but got 0.
+src/app/shared/directives/collapse.directive.ts(33,23): error TS2554: Expected 1 arguments, but got 0.
+src/app/shared/directives/dropdown.directive.ts(54,23): error TS2554: Expected 1 arguments, but got 0.
+src/app/shared/directives/fake-slides.directive.ts(23,48): error TS2551: Property 'addGlobalEventListener' does not exist on type 'EventManager'. Did you mean 'addEventListener'?

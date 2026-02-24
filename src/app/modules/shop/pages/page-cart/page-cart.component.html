@@ -1,0 +1,132 @@
+<mat-progress-bar mode="indeterminate" *ngIf="updating"></mat-progress-bar>
+<app-page-header [header]="'Panier'" [breadcrumbs]="[
+    {label: 'Page d\'accueil',          url: root.home()},
+    {label: 'Panier', url: ''}
+]"></app-page-header>
+
+<div class="block block-empty" *ngIf="!items.length">
+    <div class="container">
+        <div class="block-empty__body">
+            <div class="block-empty__message">{{'dropcart.Yourshoppingcartisempty' | translate}}!</div>
+            <div class="block-empty__actions">
+                <a [routerLink]="root.shop()" class="btn btn-primary btn-sm">{{'page-cart.Continue' | translate}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cart block" *ngIf="items.length">
+    <div class="container">
+        <table class="cart__table cart-table">
+            <thead class="cart-table__head">
+                <tr class="cart-table__row">
+                    <th class="cart-table__column cart-table__column--image">{{'page-cart.Image' | translate}}</th>
+                    <th class="cart-table__column cart-table__column--product">{{'page-cart.Product' | translate}}</th>
+                    <th class="cart-table__column cart-table__column--product">{{'page-cart.Reference' | translate}}
+                    </th>
+                    <th class="cart-table__column cart-table__column--price">{{'page-cart.Price' | translate}}</th>
+                    <th class="cart-table__column cart-table__column--price">{{'product.QuantityPerParcel' | translate}}
+                    </th>
+                    <th class="cart-table__column cart-table__column--quantity">{{'page-cart.Quantity' | translate}}
+                    </th>
+                    <th class="cart-table__column cart-table__column--price">
+                        {{'page-cart.TotalQuantity' | translate}}
+                    </th>
+                    <th class="cart-table__column cart-table__column--total">{{'page-cart.Total' | translate}}</th>
+                    <th class="cart-table__column cart-table__column--remove"></th>
+                </tr>
+            </thead>
+            <tbody class="cart-table__body">
+                <tr *ngFor="let item of items" class="cart-table__row">
+                    <td class="cart-table__column cart-table__column--image">
+                        <a *ngIf="item.cartItem.product.DefaultPhotoPath" [routerLink]="['/shop/products']"
+                            [queryParams]="{ProductId: item.cartItem.product.ProductId }">
+                            <img  [src]="item.cartItem.product.DefaultPhotoPath" alt="">
+                        </a>
+                    </td>
+                    <td class="cart-table__column cart-table__column--product">
+                        <a class="cart-table__product-name" [routerLink]="['/shop/products']"
+                            [queryParams]="{ProductId: item.cartItem.product.ProductId }">{{ item.cartItem.product.Label
+                            }}</a>
+                    </td>
+                    <td class="cart-table__column cart-table__column--product" style="text-align: center;">
+                        <a class="cart-table__product-name" [routerLink]="['/shop/products']"
+                            [queryParams]="{ProductId: item.cartItem.product.ProductId }">
+                            {{ item.cartItem.product.Code }}</a>
+                    </td>
+                    <td class="cart-table__column cart-table__column--price" data-title="Price">
+                        <span *ngIf="loginService.loginStatus|async">
+                            {{ item.cartItem.product.Price|currencyFormat }}</span>
+                    </td>
+                    <td class="cart-table__column cart-table__column--price" data-title="QuantityPerBox">
+                        <span>
+                            {{ item.cartItem.product.QuantityPerBox }}</span>
+                    </td>
+                    <td class="cart-table__column cart-table__column--quantity" data-title="Quantity">
+                        <app-input-number [formControl]="item.quantityControl" (quantityChange)="update()"
+                            [min]="item.cartItem.product.MinQuantity"></app-input-number>
+                    </td>
+                    <td class="cart-table__column cart-table__column--price" data-title="Total">
+                        <span>
+                            {{item.quantity * item.cartItem.product.QuantityPerBox }}
+                        </span>
+                    </td>
+                    <td class="cart-table__column cart-table__column--total" data-title="Total">
+                        <span *ngIf="loginService.loginStatus|async">
+                            {{ item.cartItem.product.Price * item.quantity * item.cartItem.product.QuantityPerBox
+                            |currencyFormat }}</span>
+                    </td>
+                    <td class="cart-table__column cart-table__column--remove">
+                        <button type="button" class="btn btn-light btn-sm btn-svg-icon" (click)="remove(item.cartItem)"
+                            [ngClass]="{'btn-loading': removedItems.includes(item.cartItem)}">
+                            <app-icon name="cross-12" size="12"></app-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="cart__actions">
+            <div>
+                <a routerLink="/" class="btn btn-primary">{{'page-cart.ContinueShopping' | translate}}</a>
+                <!-- <button type="button" class="btn btn-primary cart__update-button" (click)="update()"
+                    [ngClass]="{'btn-loading': updating}"
+                    [disabled]="!needUpdate()">{{'page-cart.UpdateCart' | translate}}</button> -->
+            </div>
+        </div>
+
+        <div class="row justify-content-end pt-5" *ngIf="loginService.loginStatus|async">
+            <div class="col-12 col-md-7 col-lg-6 col-xl-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">{{'page-cart.CartTotals' | translate}}</h3>
+
+                        <table class="cart__totals">
+                            <thead *ngIf="(cart.totals$|async).length" class="cart__totals-header">
+                                <tr>
+                                    <th>{{'page-cart.Subtotal' | translate}}</th>
+                                    <td>{{ cart.subtotal$|async|currencyFormat }}</td>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="(cart.totals$|async).length" class="cart__totals-body">
+                                <tr *ngFor="let total of cart.totals$|async">
+                                    <th>{{ total.title | translate }}</th>
+                                    <td *ngIf="total.type!='shipping'">{{ total.price|currencyFormat }}</td>
+                                    <td *ngIf="total.type =='shipping'">{{'dropcart.Aestimer' | translate}} </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="cart__totals-footer">
+                                <tr>
+                                    <th>{{'page-cart.Total' | translate}}</th>
+                                    <td>{{ cart.total$|async|currencyFormat }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <a class="btn btn-primary btn-xl btn-block cart__checkout-button"
+                            routerLink="./checkout">{{'page-cart.Proceedtocheckout' | translate}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

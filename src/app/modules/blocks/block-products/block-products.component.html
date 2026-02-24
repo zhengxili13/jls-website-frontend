@@ -1,0 +1,33 @@
+<!-- .block-products -->
+<div class="block block-products block-products--layout--{{ layout }}" style="margin-top: 4em;">
+    <div class="container">
+        <app-block-header [header]="header" [badge]="badgeTitle"  [orderby]= "orderby"></app-block-header>
+
+        <div class="block-products__body">
+            <ng-template #largeTemplate>
+                <ng-container *ngIf="large !== null">
+                    <div class="block-products__featured">
+                        <div class="block-products__featured-item">
+                            <app-product-card1 [product]="large"></app-product-card1>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-template>
+            <ng-template #smallsTemplate>
+                <div *ngIf="smalls.length > 0" class="block-products__list">
+                    <div *ngFor="let product of smalls" class="block-products__list-item">
+                        <app-product-card1 [product]="product"></app-product-card1>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-container *ngIf="layout === 'large-last'" [ngTemplateOutlet]="smallsTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="largeTemplate"  *ngIf="layout != 'none'"></ng-container>
+            <ng-container *ngIf="layout === 'large-first'" [ngTemplateOutlet]="smallsTemplate"></ng-container>
+
+            
+            <ng-container *ngIf="layout === 'none'" [ngTemplateOutlet]="smallsTemplate"></ng-container>
+        </div>
+    </div>
+</div>
+<!-- .block-products / end -->

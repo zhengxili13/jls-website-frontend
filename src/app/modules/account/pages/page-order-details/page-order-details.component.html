@@ -1,0 +1,173 @@
+<div class="card">
+    <div class="order-header">
+        <div class="order-header__actions">
+            <a routerLink="/account/orders" class="btn btn-xs btn-secondary">{{'page-order-details.Backtolist' |
+                translate}}</a>
+        </div>
+        <h5 class="order-header__title">
+            {{'page-order-details.Order' | translate}} #{{ order.OrderInfo.Id }}
+            <button (click)="copyCommande(confirmModal)" class="btn btn-primary btn-xs" style="vertical-align: middle;margin-bottom: 3px;">{{'CopyOrderTitle' | translate}}</button>
+        </h5>
+        <div class="order-header__subtitle">
+            {{'page-order-details.Wasplacedon' | translate}} <mark
+                class="order-header__date">{{order.OrderInfo.CreatedOn| date:'short' }}</mark>
+            {{'page-order-details.andiscurrently' | translate}} <mark class="order-header__status">{{ order.Status.Label
+                }}</mark>.
+        </div>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-table">
+        <div class="table-responsive-sm">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{'page-order-details.Product' | translate}}</th>
+                        <th>{{'page-cart.Reference' | translate}}</th>
+                        <th>{{'page-order-details.UnitPrice' | translate}}</th>
+                        <th>{{'product.QuantityPerParcel' | translate}}</th>
+                        <th>{{'product.Quantity' | translate}}</th>
+                        <th>{{'page-cart.TotalQuantity' | translate}}</th>
+                        <th>{{'page-order-details.Total' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody class="card-table__body card-table__body--merge-rows">
+                    <tr *ngFor="let item of order.ProductList">
+                        <td>
+                            <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }">
+                                <img [src]="host + item.DefaultPhotoPath" alt="" style="width: 80px;">
+                            </a>
+                        </td>
+                        <td>
+                            <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }" style="color: unset;">
+                                {{ item.Label }}
+                            </a>
+                        </td>
+                        <td>
+                            <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }" style="color: unset;">
+                                {{ item.Code }}
+                            </a>
+                        </td>
+                        <td>{{ item.Price |currencyFormat }}</td>
+                        <td>{{ item.QuantityPerBox }}</td>
+                        <td>{{ item.Quantity }}</td>
+                        <td>{{ item.Quantity * item.QuantityPerBox }}</td>
+                        <td>{{ (item.Price*item.Quantity*item.QuantityPerBox) |currencyFormat }}</td>
+                    </tr>
+                </tbody>
+                <tbody class="card-table__body card-table__body--merge-rows">
+
+                    <tr>
+                        <th>{{'page-order-success.Subtotal' | translate}}</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ (order.OrderInfo.TotalPrice - 0.01* taxRate* order.OrderInfo.TotalPrice/(1 + 0.01*
+                            taxRate) ) |currencyFormat }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{'page-order-success.TxTAX' | translate}}</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ taxRate }}%</td>
+                    </tr>
+                    <tr>
+                        <th>{{'page-order-details.Tax' | translate}}</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ 0.01* taxRate* order.OrderInfo.TotalPrice/(1 + 0.01* taxRate) |currencyFormat }}</td>
+                    </tr>
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>{{'page-order-details.Total' | translate}}</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ order.OrderInfo.TotalPrice |currencyFormat }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3 no-gutters mx-n2">
+    <div class="col-sm-6 col-12 px-2" *ngIf="order.ShippingAdress">
+        <div class="card address-card address-card--featured">
+            <div class="address-card__body">
+                <div class="address-card__badge address-card__badge--muted">{{'page-order-details.ShippingAddress' |
+                    translate}}</div>
+                <div class="address-card__name" style="margin-bottom:0">{{'page-order-details.EntrepriseName' |
+                    translate}}:</div>
+                <div class="address-card__name">{{ order.ShippingAdress.EntrepriseName }}</div>
+                <div class="address-card__row">
+                    {{ order.ShippingAdress.FirstLineAddress }}<br>
+                    {{ order.ShippingAdress.SecondLineAddress }}<br>
+
+                    {{ order.ShippingAdress.ZipCode }}, {{ order.ShippingAdress.City }}<br>
+                    {{ order.ShippingAdress.Country }}
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">{{'page-order-details.PhoneNumber' | translate}}</div>
+                    <div class="address-card__row-content">{{ order.ShippingAdress.ContactTelephone }}</div>
+                </div>
+                <!-- <div class="address-card__row">
+                    <div class="address-card__row-title">{{'page-order-details.EntrepriseName' | translate}}</div>
+                    <div class="address-card__row-content">{{ order.ShippingAdress.EntrepriseName }}</div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-12 px-2 mt-sm-0 mt-3" *ngIf="order.FacturationAdress">
+        <div class="card address-card address-card--featured">
+            <div class="address-card__body">
+                <div class="address-card__badge address-card__badge--muted">{{'page-order-details.BillingAddress' |
+                    translate}}</div>
+                <div class="address-card__name" style="margin-bottom:0">{{'page-order-details.EntrepriseName' |
+                    translate}}:</div>
+                <div class="address-card__name">{{ order.FacturationAdress.EntrepriseName }}</div>
+                <div class="address-card__row">
+                    {{ order.FacturationAdress.FirstLineAddress }}<br>
+                    {{ order.FacturationAdress.SecondLineAddress }}<br>
+
+                    {{ order.FacturationAdress.ZipCode }}, {{ order.ShippingAdress.City }}<br>
+                    {{ order.FacturationAdress.Country }}
+                </div>
+                <div class="address-card__row">
+                    <div class="address-card__row-title">{{'page-order-details.PhoneNumber' | translate}}</div>
+                    <div class="address-card__row-content">{{ order.FacturationAdress.ContactTelephone }}</div>
+                </div>
+                <!-- <div class="address-card__row">
+                    <div class="address-card__row-title">{{'page-order-details.EntrepriseName' | translate}}</div>
+                    <div class="address-card__row-content">{{ order.FacturationAdress.EntrepriseName }}</div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  <ng-template #confirmModal>
+    <div class="modal-body text-center">
+      <p> {{'CopyOrder' | translate}}</p>
+      
+      <button type="button" class="btn btn-default" (click)="modalRef.hide()" >{{'No' | translate}}</button>
+      <button type="button" class="btn btn-primary" (click)="confirm()" >{{'Yes' | translate}}</button>
+    </div>
+  </ng-template>

@@ -1,0 +1,62 @@
+<div class="footer-newsletter">
+    <h5 class="footer-newsletter__title">{{'newsletter.Newsletter' | translate}}</h5>
+    <div class="footer-newsletter__text">
+        {{'newsletter.SubscribeNewsletter' | translate}}
+    </div>
+
+    <form class="footer-newsletter__form" [formGroup]="basicInfoForm">
+        <label class="sr-only" for="footer-newsletter-address">{{'newsletter.EmailAddress' | translate}}</label>
+        <input type="text" class="footer-newsletter__form-input form-control" formControlName="email"
+            id="footer-newsletter-address" placeholder="{{'newsletter.EmailAddress' | translate}}...">
+
+        <button class="footer-newsletter__form-button btn btn-primary" style="width: 100px;"
+            (click)="save()">{{'newsletter.Subscribe' | translate}}</button>
+    </form>
+
+    <div class="footer-newsletter__text footer-newsletter__text--social">
+        {{'newsletter.FollowUs' | translate}}
+    </div>
+
+    <ul class="footer-newsletter__social-links" *ngIf="!simplifyHomePage">
+        <li class="footer-newsletter__social-link footer-newsletter__social-link--facebook"><a
+                [href]="theme.author.profile_url" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+        <li class="footer-newsletter__social-link footer-newsletter__social-link--twitter"><a
+                [href]="theme.author.profile_url" target="_blank"><i class="fab fa-twitter"></i></a></li>
+        <li class="footer-newsletter__social-link footer-newsletter__social-link--youtube"><a
+                [href]="theme.author.profile_url" target="_blank"><i class="fab fa-youtube"></i></a></li>
+        <li class="footer-newsletter__social-link footer-newsletter__social-link--instagram"><a
+                [href]="theme.author.profile_url" target="_blank"><i class="fab fa-instagram"></i></a></li>
+        <li class="footer-newsletter__social-link footer-newsletter__social-link--rss"><a
+                [href]="theme.author.profile_url" target="_blank"><i class="fas fa-rss"></i></a></li>
+    </ul>
+
+    <div class="mobile-download-buttons-wrapper">
+        <ul class="mobile-download-buttons firefox" id="mobile-download-buttons-firefox_2" style="list-style: none;padding-left:0;">
+            <li class="android" style=" display: inline;margin-right: 20px;">
+                <a id="playStoreLink-secondary" rel="external"
+                    href="https://play.google.com/store/apps/details?id=io.ionic.jlsimport.prod"
+                    data-link-type="download" data-download-os="Android"
+                    data-mozillaonline-link="https://play.google.com/store/apps/details?id=io.ionic.jlsimport.prod">
+                    <img class=""
+                        src="https://www.mozilla.org/media/img/l10n/fr/firefox/android/btn-google-play.86f2f9706895.png"
+                        srcset="https://www.mozilla.org/media/img/l10n/fr/firefox/android/btn-google-play-high-res.bb6f67687d0d.png 1.5x"
+                        alt="Disponible sur Google Play" width="152" height="45">
+                </a>
+            </li>
+            <li class="ios" style=" display: inline">
+                <a id="appStoreLink-secondary"
+                    href="https://apps.apple.com/us/app/id1530457721"
+                    data-link-type="download" data-download-os="iOS">
+                    <img src="https://www.mozilla.org/media/img/l10n/fr/firefox/ios/btn-app-store.f31d276f8cef.svg"
+                        alt="Disponible sur l’App Store" width="152" height="45">
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div>
+        <img src="./assets/images/google_barrecode.png" alt="" style="width: 150px;">
+        <img src="./assets/images/apple_barrecode.png" alt="" style="width: 150px;margin-left: 23px;">
+    </div>
+</div>

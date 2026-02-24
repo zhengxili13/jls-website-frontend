@@ -1,0 +1,9 @@
+<div class="search">
+    <div class="search__form" action="">
+        <input class="search__input" (keyup.enter)="keyEnter()" name="search" placeholder="{{'topbar.Search' | translate}}" aria-label="Site search" type="text" autocomplete="off" [(ngModel)]="searchText">
+        <button class="search__button" [routerLink]="['/shop/catalog']" [queryParams]="{SearchText: searchText}">
+            <app-icon name="search-20" size="20"></app-icon>
+        </button>
+        <div class="search__border" ></div>
+    </div>
+</div>

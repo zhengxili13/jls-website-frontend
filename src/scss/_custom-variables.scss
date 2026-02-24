@@ -1,0 +1,13 @@
+// -------------------------
+// --- You can add your variables to overwrite default values.
+// -------------------------
+
+// Uncomment one of the following line if you want to get appropriate theme.
+@import 'themes/theme-red/theme-variables';
+//@import 'themes/theme-blue/theme-variables';
+//@import 'themes/theme-black/theme-variables';
+//@import 'themes/theme-green/theme-variables';
+
+$direction:       ltr;   // specify the direction you need (ltr or rtl)
+$both-directions: false; // set to false to disable style compilation
+                         // for two directions

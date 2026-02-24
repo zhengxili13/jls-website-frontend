@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">
+        <h5>{{'page-edit-address.EditAddress' | translate}}</h5>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-body">
+        <div class="row no-gutters">
+            <form class="col-12 col-lg-10 col-xl-8" [formGroup]="adressForm">
+ 
+
+                <div class="form-group">
+                    <label for="checkout-company-name">{{'page-checkout.CompanyName' | translate}}  <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="checkout-company-name" formControlName="EntrepriseName">
+                </div>
+     
+                <div class="form-group">
+                    <label for="checkout-street-address">{{'page-checkout.Country' | translate}}  <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="checkout-country" formControlName="Country">
+                </div>
+
+                <div class="form-group">
+                    <label for="checkout-street-address">{{'page-checkout.StreetAddress' | translate}}  <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="checkout-street-address" formControlName="FirstLineAddress">
+                </div>
+                <div class="form-group">
+                    <label for="checkout-address">{{'page-checkout.Apartmentsuiteunitetc' | translate}} <span class="text-muted">({{'page-checkout.Optional' | translate}})</span></label>
+                    <input type="text" class="form-control" id="checkout-address" formControlName="SecondLineAddress">
+                </div>
+                <div class="form-group">
+                    <label for="checkout-city">{{'page-checkout.TownCity' | translate}}  <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="checkout-city" formControlName="City">
+                </div>
+  
+                <div class="form-group">
+                    <label for="checkout-postcode">{{'page-checkout.ZIP' | translate}}  <span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="checkout-postcode" formControlName="ZipCode">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="checkout-phone">{{'page-checkout.Phone' | translate}}  <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="checkout-phone" formControlName="ContactTelephone" placeholder="{{'page-checkout.Phone' | translate}}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="checkout-phone">{{'page-checkout.Fax' | translate}}</label>
+                        <input type="text" class="form-control" id="checkout-phone" formControlName="ContactFax" placeholder="{{'page-checkout.Phone' | translate}}">
+                    </div>
+                </div>
+                <div class="alert alert-danger" role="alert" *ngIf="adressForm.invalid">{{'imcomplete' | translate}}</div>
+                <div class="form-group mt-3 mb-0">
+                    <button class="btn btn-primary" (click)="save()" [disabled]="adressForm.invalid">{{'page-edit-address.Save' | translate}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,10 @@
+<div class="site-footer__widget footer-links">
+    <h5 class="footer-links__title" translate>{{ header }}</h5>
+    <ul class="footer-links__list">
+        <li *ngFor="let link of links" class="footer-links__item">
+            <a [routerLink]="link.url" class="footer-links__link" translate *ngIf="link.action==null">{{ link.label }}</a>
+            
+            <a class="footer-links__link" style="cursor: pointer;" translate *ngIf="link.action=='export' && (loginService.loginStatus|async)" (click)="export()" >{{ link.label }}</a>
+        </li>
+    </ul>
+</div>

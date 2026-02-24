@@ -1,0 +1,24 @@
+<div class="block-header">
+  
+    <h3 class="block-header__title" *ngIf="badge == null">{{ header | translate }}</h3>
+         <div *ngIf="badge == 'promo'" class="product-card__badge product-card__badge--sale" style="margin-bottom: 0px;margin-left: 8px;">  <h3 class="block-header__title">{{ header | translate }}</h3></div>
+        <!--<div *ngIf="product.badges.includes('hot')" class="product-card__badge product-card__badge--hot">Hot</div>-->
+        <div *ngIf="badge == 'new'"  class="product-card__badge product-card__badge--hot" style="margin-bottom: 0px;margin-left: 8px;">  <h3 class="block-header__title">{{ header | translate }}</h3></div> 
+ 
+    <div class="block-header__divider"></div>
+    <a [routerLink]="['/shop/catalog']"  [queryParams]="{Orderby: orderby}" *ngIf="orderby!=null">{{'All' | translate}} </a>
+    <ul *ngIf="groups?.length" class="block-header__groups-list">
+        <li *ngFor="let group of groups">
+            <button type="button" class="block-header__group" [ngClass]="{'block-header__group--active': group.current}" (click)="setGroup(group)">{{ group.name }}</button>
+        </li>
+    </ul>
+
+    <div *ngIf="arrows" class="block-header__arrows-list">
+        <button class="block-header__arrow block-header__arrow--left" type="button" (click)="prev.emit()">
+            <app-icon name="arrow-rounded-left-7x11" size="7x11"></app-icon>
+        </button>
+        <button class="block-header__arrow block-header__arrow--right" type="button" (click)="next.emit()">
+            <app-icon name="arrow-rounded-right-7x11" size="7x11"></app-icon>
+        </button>
+    </div>
+</div>

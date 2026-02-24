@@ -1,0 +1,75 @@
+<div class="container">
+    <div class="row">
+        <div class="card flex-grow-1 mb-md-0">
+            <div class="card-body">
+                <h3 class="card-title">  {{'page-chat.Title' | translate}}</h3>
+                <div class="container">  
+                  <div class="content" role="main">
+                  
+                    <div  class="container">
+                      <div class="messaging">
+                        <div class="inbox_msg">
+                    
+                          <div class="mesgs">
+                            <div class="msg_history" #scrollMe>
+                              <li class="message" *ngFor="let message of messages">
+                                <div
+                                  *ngIf="
+                                  message.type == 'sent';
+                                    then outgoing_msg;
+                                    else incoming_msg
+                                  "
+                                ></div>
+                                <ng-template #incoming_msg>
+                                  <div class="incoming_msg">
+                                    <div class="incoming_msg_img">
+                                      <img
+                                        src="https://i.imgur.com/k2PZLZa.png"
+                                        alt="User avatar"
+                                      />
+                                    </div>
+                                    <div class="received_msg">
+                                      <div class="received_withd_msg">
+                                        <p>{{ message.message }}</p>
+                                        <span class="time_date"> {{message.date | date:'medium'}} </span>  
+                                      </div>
+                                    </div>
+                                  </div>
+                                </ng-template>
+                                <ng-template #outgoing_msg>
+                                  <div class="outgoing_msg">
+                                    <div class="sent_msg">
+                                      <p>{{ message.message }}</p>
+                                      <span class="time_date"> {{message.date | date:'medium'}} </span>  
+                                    </div>
+                                  </div>
+                                </ng-template>
+                              </li>
+                            </div>
+                            <div class="type_msg">
+                              <div class="input_msg_write">
+                                <input
+                                  type="text"
+                                  class="write_msg"
+                                  placeholder="{{ 'page-chat.SendAMessage' | translate}}"
+                                  
+                                  autocomplete="off"
+                                  name="newMessage"
+                                  [(ngModel)]="txtMessage"
+                                  (keydown.enter)="sendMessage()"
+                                />
+                                <button class="msg_send_btn btn-primary" type="button" (click)="sendMessage()">
+                                  {{'page-chat.Send' | translate}}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                     
+                  </div> 
+            </div>
+        </div>
+    </div>
+</div>

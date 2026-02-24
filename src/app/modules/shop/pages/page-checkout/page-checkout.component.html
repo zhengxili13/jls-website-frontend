@@ -1,0 +1,149 @@
+<app-page-header [header]="'Validation de la commande'" [breadcrumbs]="[
+    {label: 'Page d\'accueil',          url: root.home()},
+    {label: 'Panier', url: root.cart()},
+    {label: 'Validation de la commande',      url: ''}
+]"></app-page-header>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="checkout block">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <app-alert type="primary" size="lg" [innerHTML] = "storeService.shippingInfo|async"></app-alert>
+            </div>
+           
+            <div class="col-12 col-lg-12 col-xl-12" *ngIf="!setSameAddress">
+                <div class="card mb-0">
+                    <div class="dashboard__address address-card address-card--featured" style="width: 100%;">
+
+                        <div class="address-card__body">
+                            <h3 class="card-title">{{'page-checkout.Billingdetails' | translate}}</h3>
+                            <div class="address-card__name" style="margin-bottom:0">{{'page-order-details.EntrepriseName' | translate}}:</div>
+                            <div class="address-card__name">{{ facturationAddress.EntrepriseName }}</div>
+                            <div class="address-card__row">
+                                {{ facturationAddress.FirstLineAddress }}<br>
+                                {{ facturationAddress.SecondLineAddress }}<br>
+                           
+                                {{ facturationAddress.ZipCode }}, {{ facturationAddress.City }}<br>
+                                {{  facturationAddress.Country }}
+                            </div>
+                            <div class="address-card__row">
+                                <div class="address-card__row-title">{{'page-dashboard.PhoneNumber' | translate}}
+                                </div>
+                                <div class="address-card__row-content">{{ facturationAddress.ContactTelephone }}
+                                </div>
+                            </div>
+             
+                            <div class="address-card__footer">
+                                <a [routerLink]="['/account/address']"
+                                    [queryParams]="{Type: 'facturationAdress' }">{{'page-dashboard.EditAddress' | translate}}</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-lg-12 col-xl-12" style="margin-top: 20px!important;">
+                <div class="card mb-lg-0">
+                    <div class="card-body">
+                        <div class="card-title">
+                           <h3>{{'page-checkout.ShippingAddress' | translate}}</h3> 
+                           <div class="form-check">
+                            <span class="form-check-input input-check">
+                                <span class="input-check__body">
+                                    <input class="input-check__input" type="checkbox" id="checkout-same" [(ngModel)]="setSameAddress">
+                                    <span class="input-check__box"></span>
+                                    <svg class="input-check__icon" width="9px" height="7px">
+                                        <use xlink:href="assets/images/sprite.svg#check-9x7"></use>
+                                    </svg>
+                                </span>
+                            </span>
+                            <label class="form-check-label" for="checkout-same">
+                                {{'page-checkout.SameAddress' | translate}}
+                            </label>
+                        </div>
+                        </div>
+                        <app--addresses-list (change)="selectedAddressChange($event)" returnUrl="/shop/cart/checkout" [addresses] = "shippingAddress" [disableRemove]="true" [selectAddress]="true"></app--addresses-list>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-lg-6 col-xl-6 mt-6 mt-lg-6" style="margin-top: 20px!important;">
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <h3 class="card-title">{{'page-wishlist.Reviews' | translate}}</h3>
+                        <div class="form-group">
+                            <label for="checkout-comment">{{'page-checkout.Ordernotes' | translate}} <span
+                                    class="text-muted">({{'page-checkout.Optional' | translate}})</span></label>
+                            <textarea id="checkout-comment" class="form-control" rows="4" [(ngModel)]="orderCriteria.ClientRemark"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 col-xl-6 mt-6 mt-lg-6" style="margin-top: 20px!important;">
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <h3 class="card-title">{{'page-checkout.YourOrder' | translate}}</h3>
+
+                        <table class="checkout__totals">
+                            <thead class="checkout__totals-header">
+                                <tr>
+                                    <th>{{'page-checkout.Product' | translate}}</th>
+                                    <th>{{'page-checkout.Total' | translate}}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="checkout__totals-products">
+                                <tr *ngFor="let item of cart.items$|async">
+                                    <td>{{ item.product.Label }} × {{ item.quantity }} x {{ item.product.QuantityPerBox }}</td>
+                                    <td>{{ item.product.Price * item.quantity * item.product.QuantityPerBox |currencyFormat }}</td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="(cart.totals$|async).length" class="checkout__totals-subtotals">
+                                <tr>
+                                    <th>{{'page-checkout.Subtotal' | translate}}</th>
+                                    <td>{{ cart.subtotal$|async|currencyFormat }}</td>
+                                </tr>
+                      
+                                <tr *ngFor="let total of cart.totals$|async">
+                                    <th>{{ total.title | translate }}</th>
+                                    <td>{{ total.price|currencyFormat }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="checkout__totals-footer">
+                                <tr>
+                                    <th>{{'page-checkout.Total' | translate}}</th>
+                                    <td>{{ cart.total$|async|currencyFormat }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="checkout__agree form-group">
+                            <div class="form-check">
+                                <span class="form-check-input input-check">
+                                    <span class="input-check__body">
+                                        <input class="input-check__input" type="checkbox" id="checkout-terms" [(ngModel)]="orderCriteria.AcceptCondition">
+                                        <span class="input-check__box"></span>
+                                        <svg class="input-check__icon" width="9px" height="7px">
+                                            <use xlink:href="assets/images/sprite.svg#check-9x7"></use>
+                                        </svg>
+                                    </span>
+                                </span>
+                                <label class="form-check-label" for="checkout-terms">
+                                    {{'page-checkout.Agree' | translate}} <a target="_blank"
+                                        [routerLink]="root.terms()">{{'page-checkout.termsandconditions' | translate}}</a>*
+                                </label>
+                            </div>
+                        </div>
+
+                        <button (click)="ValideOrder()"
+                            class="btn btn-primary btn-xl btn-block">{{'page-checkout.PlaceOrder' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

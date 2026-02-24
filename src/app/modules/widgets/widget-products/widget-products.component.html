@@ -1,0 +1,21 @@
+<div class="widget-products widget">
+    <h4 class="widget__title">{{ header }}</h4>
+    <div class="widget-products__list">
+        <div *ngFor="let product of products" class="widget-products__item">
+            <div class="widget-products__image">
+                <a appClick  *ngIf="product.DefaultPhotoPath" [routerLink]="['/shop/products']" [queryParams]="{ProductId: product.ProductId }"><img [src]="product.DefaultPhotoPath" alt="" ></a>
+                <a appClick  *ngIf="!product.DefaultPhotoPath" [routerLink]="['/shop/products']" [queryParams]="{ProductId: product.ProductId }"><img src="assets/images/products/product-7.jpg" alt=""></a>
+            </div>
+            <div class="widget-products__info">
+                <div class="widget-products__name">
+                    <a appClick [routerLink]="['/shop/products']" [queryParams]="{ProductId: product.ProductId }">{{ product.Label }}</a>
+                </div>
+                <div class="widget-products__prices" *ngIf="loginService.loginStatus|async">
+                    <ng-container>
+                        {{ product.Price|currencyFormat }}(HT)
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

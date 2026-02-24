@@ -1,0 +1,87 @@
+
+<div class="products-view" [ngClass]="{'products-view--loading': this.pageService.isLoading$|async}" [formGroup]="listOptionsForm">
+    <div class="products-view__pagination">
+        <app-pagination formControlName="CurrentPage" [siblings]="2" [total]="pageService1.TotalPage"></app-pagination>
+    </div>
+    <div class="products-view__loader"></div>
+
+    <div *ngIf="pageService1.items?.length" class="products-view__content">
+        <div class="products-view__options">
+            <div class="view-options" [ngClass]="{
+                'view-options--offcanvas--always': offcanvas === 'always',
+                'view-options--offcanvas--mobile': offcanvas === 'mobile'
+            }">
+                <div class="view-options__filters-button">
+                    <button type="button" class="filters-button" (click)="sidebar.open()">
+                        <app-icon class="filters-button__icon" name="filters-16" size="16"></app-icon>
+                        <span class="filters-button__title">{{'products-view.Filters' | translate}}</span>
+                        <span class="filters-button__counter" *ngIf="filtersCount > 0">{{ filtersCount }}</span>
+                    </button>
+                </div>
+                <div class="view-options__layout">
+                    <div class="layout-switcher">
+                        <div class="layout-switcher__list">
+                            <button title="Grid" type="button" class="layout-switcher__button"
+                                    [ngClass]="{'layout-switcher__button--active': layout === 'grid'}" (click)="setLayout('grid')">
+
+                                <app-icon name="layout-grid-16x16" size="16"></app-icon>
+                            </button>
+                    
+                            <button title="List" type="button" class="layout-switcher__button"
+                                    [ngClass]="{'layout-switcher__button--active': layout === 'list'}" (click)="setLayout('list')">
+
+                                <app-icon name="layout-list-16x16" size="16"></app-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="view-options__legend">
+                    <!-- Showing {{ this.pageService1.from }}–{{ this.pageService1.to }} -->
+                    {{'products-view.Showing' | translate}} {{ this.pageService1.FromItems }} – {{ this.pageService1.ToItems }}
+                    {{'products-view.of' | translate}} {{ this.pageService1.TotalCount }}
+                    {{'products-view.results' | translate}}
+                </div>
+                <div class="view-options__divider"></div>
+                <div class="view-options__control">
+                    <label for="view-options-sort">{{'products-view.SortBy' | translate}}</label>
+                    <div>
+                        <select class="form-control form-control-sm" id="view-options-sort" formControlName="OrderBy">
+                            <option value="Default">{{'products-view.Default' | translate}}</option>
+                            <option value="Promotion_More">{{'Promotionproduit' | translate}}</option>
+                            <option value="Price_Increase">{{'products-view.Priceincrease' | translate}}</option>
+                            <option value="Price_Decrease">{{'products-view.Pricedecrease' | translate}}</option>
+                            <option value="PublishDate_Recent">{{'products-view.Recently' | translate}}</option>
+                            <option value="Porpularity_More">{{'products-view.Popularity' | translate}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="view-options__control">
+                    <label for="view-options-limit">{{'products-view.Show' | translate}}</label>
+                    <div>
+                        <select class="form-control form-control-sm" id="view-options-limit" formControlName="Step">
+                            <option [value]="item" *ngFor="let item of pageService1.pageOption">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="products-view__list products-list" [attr.data-layout]="layout != 'list' ? grid : layout" [attr.data-with-features]="layout == 'grid-with-features' ? 'true' : 'false'">
+            <div class="products-list__body">
+                <div *ngFor="let product of pageService1.items" class="products-list__item" >
+                    <app-product-card1 [product]="product"></app-product-card1>
+                </div>
+            </div>
+        </div>
+
+        <div class="products-view__pagination">
+            <app-pagination formControlName="CurrentPage" [siblings]="2" [total]="pageService1.TotalPage"></app-pagination>
+        </div>
+    </div>
+
+    <div *ngIf="!pageService1.items?.length" class="products-view__empty">
+        <div class="products-view__empty-title">{{'products-view.Nomatchingitems' | translate}}</div>
+        <div class="products-view__empty-subtitle">{{'products-view.Tryresettingthefilters' | translate}}</div>
+        <button type="button" class="btn btn-primary btn-sm" (click)="resetFilters()">{{'products-view.Resetfilters' | translate}}</button>
+    </div>
+</div>

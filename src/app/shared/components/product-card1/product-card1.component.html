@@ -1,0 +1,114 @@
+<div class="product-card" [ngClass]="{
+    'product-card--layout--grid product-card--size--sm': layout === 'grid-sm',
+    'product-card--layout--grid product-card--size--nl': layout === 'grid-nl',
+    'product-card--layout--grid product-card--size--lg': layout === 'grid-lg',
+    'product-card--layout--list':                        layout === 'list',
+    'product-card--layout--horizontal':                  layout === 'horizontal'
+}">
+    <button class="product-card__quickview" type="button" appClick (click)="showQuickview()"
+        [ngClass]="{'product-card__quickview--preload': showingQuickview}">
+        <app-icon name="quickview-16" size="16"></app-icon>
+        <span class="fake-svg-icon"></span>
+    </button>
+
+    <div class="product-card__badges-list">
+        <!-- <div *ngIf="product.badges.includes('sale')" class="product-card__badge product-card__badge--sale">Sale</div>
+        <div *ngIf="product.badges.includes('hot')" class="product-card__badge product-card__badge--hot">Hot</div>
+        <div *ngIf="product.badges.includes('new')" class="product-card__badge product-card__badge--new">New</div> -->
+        <div *ngIf="storeService.formatProductPromotionInfo(product)!=null"
+            class="product-card__badge product-card__badge--sale">
+            {{storeService.formatProductPromotionInfo(product).discountPerCent}}%
+        </div>
+        <div *ngIf="product.IsNew==true" class="product-card__badge product-card__badge--hot">
+            {{ 'products-view.New' | translate }}
+        </div>
+    </div>
+
+    <div class="product-card__image">
+        <a appClick *ngIf="product.DefaultPhotoPath" [routerLink]="['/shop/products']"
+            [queryParams]="{ProductId: product.ProductId }"><img [src]="host+product.DefaultPhotoPath" alt=""
+                style="max-height: 100%;"></a>
+        <a appClick *ngIf="!product.DefaultPhotoPath" [routerLink]="['/shop/products']"
+            [queryParams]="{ProductId: product.ProductId }"><img src="assets/images/products/product-7.jpg" alt=""
+                style="max-height: 100%;"></a>
+    </div>
+    <div class="product-card__info">
+        <div class="product-card__name">
+            <a appClick [routerLink]="['/shop/products']" [queryParams]="{ProductId: product.ProductId }"
+                style="font-weight: bold;">{{ product.Label }}</a>
+        </div>
+        <div class="product-card__rating" *ngIf="!hideRatingModule">
+            <app-rating [value]="storeService.calculCommentAverageNote(product.Comments)"></app-rating>
+            <div class="product-card__rating-legend">{{ product.Comments.length }} {{'product.Reviews' | translate}}
+            </div>
+        </div>
+        <!-- <ul *ngIf="featuredAttributes.length" class="product-card__features-list">
+            <li *ngFor="let attribute of featuredAttributes">
+                {{ attribute.name }}:
+                <ng-container *ngFor="let value of attribute.values; let last = last">
+                    {{ value.name }}<ng-container *ngIf="!last">, </ng-container>
+                </ng-container>
+            </li>
+        </ul> -->
+    </div>
+    <div class="product-card__actions">
+        <div class="product-card__availability">
+            {{'product.Availability' | translate}}:
+            <span class="text-success">{{'product.InStock' | translate}}</span>
+        </div>
+        <ng-container>
+            {{'product.reference'| translate}}: {{ product.Code}}
+        </ng-container>
+        <br>
+        <div *ngIf="product.QuantityPerParcel==null">
+            <ng-container>
+                {{'product.QuantityPerParcel'| translate}}: {{ product.QuantityPerBox}} pcs
+            </ng-container>
+        </div>
+
+        <div *ngIf="product.QuantityPerParcel!=null">
+            <ng-container>
+                {{'product.QuantityPerParcel'| translate}}: {{ product.QuantityPerParcel}} pcs
+            </ng-container>
+            <br>
+            <ng-container>
+                <span>
+                    {{'product.QuantityPerBox'| translate}}: {{ product.QuantityPerBox}} pcs
+                </span>
+            </ng-container>
+        </div>
+
+        <div class="product-card__prices" *ngIf="loginService.loginStatus|async">
+
+            <ng-container *ngIf="storeService.formatProductPromotionInfo(product)!=null">
+                <span class="product-card__new-price">{{ product.Price|currencyFormat }}(HT)</span>{{ ' ' }}
+                <span class="product-card__old-price">{{ product.PreviousPrice|currencyFormat }}(HT)</span>
+            </ng-container>
+
+            <ng-container *ngIf="storeService.formatProductPromotionInfo(product)==null">
+                {{ product.Price|currencyFormat }}(HT)
+            </ng-container>
+        </div>
+        <div class="product-card__buttons">
+            <span class="product-card__addtocart">Paquet(s):</span>
+        </div>
+        <div class="product-card__buttons" style="margin-top: 0px;">
+            <div>
+                <app-input-number aria-label="Quantity" class="product__quantity" size="sm" [min]="product.MinQuantity"
+                    [(ngModel)]="quantity"></app-input-number>
+            </div>
+
+            <button class="btn btn-primary product-card__addtocart" type="button" appClick (click)="addToCart()"
+                [ngClass]="{'btn-loading': addingToCart}">{{'product.AddtocartShort' | translate}}</button>
+            <button class="btn btn-secondary product-card__addtocart product-card__addtocart--list" type="button"
+                appClick (click)="addToCart()" [ngClass]="{'btn-loading': addingToCart}">{{'product.Addtocart' |
+                translate}}</button>
+            <button *ngIf="loginService.loginStatus|async" [ngStyle]="isAddedToWishList && {'fill': '#cc3333'}"
+                class="btn btn-light btn-svg-icon btn-svg-icon--fake-svg product-card__wishlist" type="button" appClick
+                (click)="addToWishlist()" [ngClass]="{'btn-loading': addingToWishlist}">
+                <app-icon name="wishlist-16" size="16"></app-icon>
+                <span class="fake-svg-icon fake-svg-icon--wishlist-16"></span>
+            </button>
+        </div>
+    </div>
+</div>

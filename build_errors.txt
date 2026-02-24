@@ -1,0 +1,39 @@
+﻿node.exe : One or more browsers which are configured in the project's Browserslist 
+configuration will be ignored as ES5 output is not supported by the Angular CLI.
+所在位置 行:1 字符: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (One or more bro...he Angular CLI.:Str 
+   ing) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Ignored browsers: kaios 2.5, op_mini all
+An unhandled exception occurred: Cannot find module 'ajv/dist/compile/codegen'
+Require stack:
+- C:\Dev\JLSWebSite\node_modules\ajv-keywords\dist\definitions\typeof.js
+- C:\Dev\JLSWebSite\node_modules\ajv-keywords\dist\keywords\typeof.js
+- C:\Dev\JLSWebSite\node_modules\ajv-keywords\dist\keywords\index.js
+- C:\Dev\JLSWebSite\node_modules\ajv-keywords\dist\index.js
+- C:\Dev\JLSWebSite\node_modules\schema-utils\dist\validate.js
+- C:\Dev\JLSWebSite\node_modules\schema-utils\dist\index.js
+- C:\Dev\JLSWebSite\node_modules\webpack-dev-server\lib\Server.js
+- C:\Dev\JLSWebSite\node_modules\@angular-devkit\build-webpack\src\builders\webpack
+-dev-server\index.js
+- C:\Dev\JLSWebSite\node_modules\@angular-devkit\build-webpack\src\index.js
+- C:\Dev\JLSWebSite\node_modules\@angular-devkit\build-angular\src\builders\browser
+\index.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\node_modules\@angular-devkit\architec
+t\node\node-modules-architect-host.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\node_modules\@angular-devkit\architec
+t\node\index.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\src\command-builder\architect-base-co
+mmand-module.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\src\command-builder\architect-command
+-module.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\src\commands\build\cli.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\src\commands\command-config.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\src\command-builder\command-runner.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\lib\cli\index.js
+- C:\Dev\JLSWebSite\node_modules\@angular\cli\lib\init.js
+See "C:\Users\123\AppData\Local\Temp\ng-PLrRo0\angular-errors.log" for further 
+details.

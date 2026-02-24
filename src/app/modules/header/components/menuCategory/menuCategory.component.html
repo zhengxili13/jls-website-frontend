@@ -1,0 +1,42 @@
+<!-- .menu -->
+<div
+    class="menu"
+    [ngClass]="{'menu--layout--classic': layout === 'classic', 'menu--layout--topbar': layout === 'topbar'}"
+    (mouseleave)="onMouseLeave()"
+    #menuElement
+>
+    <div class="menu__submenus-container">
+        <ng-container *ngFor="let item of items">
+            <div
+                *ngIf="item.items"
+                class="menu__submenu"
+                [ngClass]="{'menu__submenu--open': item === hoveredItem}"
+            >
+                <app-header-menu [items]="item.items" (itemClick)="onSubItemClick($event)"></app-header-menu>
+            </div>
+        </ng-container>
+    </div>
+
+    <ul class="menu__list">
+        <li
+            *ngFor="let item of items"
+            class="menu__item"
+            [ngClass]="{
+                'menu__item--hover': item === hoveredItem
+            }"
+            (mouseenter)="onItemMouseEnter(item)"
+            #itemElement
+        >
+            <ng-template #link>
+                {{ item.Label }}
+                <app-icon *ngIf="item.items" class="menu__item-arrow" name="arrow-rounded-right-6x9" size="6x9"></app-icon>
+            </ng-template>
+            <!-- [routerLink]="item.url" [target]="item.target" -->
+            <a  class="menu__item-link"  [routerLink]="['/shop/catalog']" [queryParams]="{CategoryLabel: item.CategoryShortLabel , ReferenceItemId: item.Id}"  (click)="itemClick.emit(item)" (appTouchClick)="onTouchClick($event, item)">
+                <ng-container [ngTemplateOutlet]="link"></ng-container>
+            </a>
+
+        </li>
+    </ul>
+</div>
+<!-- .menu / end -->

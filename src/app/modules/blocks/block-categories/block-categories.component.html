@@ -1,0 +1,34 @@
+<!-- .block-categories -->
+<div class="block block--highlighted block-categories block-categories--layout--{{ layout }}">
+    <div class="container">
+        <app-block-header [header]="header" [orderby]="orderby"></app-block-header>
+
+        <div class="block-categories__list">
+            <div *ngFor="let category of categories" class="block-categories__item category-card category-card--layout--{{ layout }}">
+                <div class="category-card__body">
+                    <!-- <div class="category-card__image">
+                        <a [routerLink]="['/shop/catalog']" [queryParams]="{CategoryId: category.CategoryId , ReferenceItemId: category.Id}"><img src="assets/images/categories/category-1.jpg" [alt]="category.Label"></a>
+                    </div> -->
+                    <div class="category-card__content">
+                      
+                        <div class="category-card__name">
+                            <a [routerLink]="['/shop/catalog']"  [queryParams]="{CategoryLabel: category.CategoryShortLabel , ReferenceItemId: category.Id}">{{ category.Label }}</a>
+                        </div>
+                        <ul class="category-card__links">
+                            <li *ngFor="let subcategory of category.SecondCategory.slice(0, 5)">
+                                <a  [routerLink]="['/shop/catalog']"  [queryParams]="{CategoryLabel: subcategory.CategoryShortLabel , ReferenceItemId: subcategory.Id}">{{ subcategory.Label }}</a>
+                            </li>
+                        </ul>
+                        <div class="category-card__all" >
+                            <a [routerLink]="['/shop/catalog']"  [queryParams]="{CategoryLabel: category.CategoryShortLabel , ReferenceItemId: category.Id}">{{'ShowAll' | translate}}</a>
+                        </div>
+                        <div class="category-card__products">
+                            {{ category.items }} Products
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- .block-categories / end -->

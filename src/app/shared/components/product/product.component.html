@@ -1,0 +1,184 @@
+<div class="product product--layout--{{ layout }}" *ngIf="product">
+    <div class="product__content">
+        <!-- .product__gallery -->
+
+        <div class="product__gallery">
+            <div class="product-gallery" *ngIf="showGallery">
+                <div class="product-gallery__featured">
+                    <owl-carousel-o [options]="carouselOptions" (changed)="featuredCarouselTranslated($event)"
+                        appOwlPreventClick #featuredCarousel>
+                        <ng-template *ngFor="let image of images" carouselSlide [id]="image.Id">
+                            <div class="product-card__badges-list">
+                                <!-- <div *ngIf="product.badges.includes('sale')" class="product-card__badge product-card__badge--sale">Sale</div>
+                                <div *ngIf="product.badges.includes('hot')" class="product-card__badge product-card__badge--hot">Hot</div>
+                                <div *ngIf="product.badges.includes('new')" class="product-card__badge product-card__badge--new">New</div> -->
+                                <div style="font-size: 24px;"
+                                    *ngIf="storeService.formatProductPromotionInfo(product)!=null"
+                                    class="product-card__badge product-card__badge--sale">
+                                    {{storeService.formatProductPromotionInfo(product).discountPerCent}}%
+                                </div>
+                                <div style="font-size: 24px;" *ngIf="product.IsNew==true"
+                                    class="product-card__badge product-card__badge--hot">
+                                    {{ 'products-view.New' | translate }}
+                                </div>
+                            </div>
+                            <a appClick (click)="openPhotoSwipe($event, image);" [href]="host + image.Path"
+                                target="_blank">
+                                <img [src]="host + image.Path" alt="" #imageElement>
+                            </a>
+                        </ng-template>
+                    </owl-carousel-o>
+                </div>
+                <div class="product-gallery__carousel">
+                    <owl-carousel-o [options]="thumbnailsCarouselOptions" [appFakeSlides]="images.length"
+                        #fakeSlides="appFakeSlides" appOwlPreventClick #thumbnailsCarousel>
+                        <ng-template *ngFor="let image of images" carouselSlide [id]="image.Id">
+                            <span class="product-gallery__carousel-item"
+                                [ngClass]="{'product-gallery__carousel-item--active': image.active}" appClick
+                                (click)="featuredCarousel.to(image.Id.toString()); setActiveImage(image)">
+                                <img class="product-gallery__carousel-image" [src]="host + image.Path" alt="">
+                            </span>
+                        </ng-template>
+                        <ng-template *ngFor="let i of fakeSlides.slides" carouselSlide [id]="'fake-slide-'+i">
+                        </ng-template>
+                    </owl-carousel-o>
+                </div>
+            </div>
+        </div>
+        <!-- .product__gallery / end -->
+        <!-- .product__info -->
+        <div class="product__info">
+            <div class="product__wishlist-compare">
+                <button type="button" class="btn btn-sm btn-light btn-svg-icon" data-toggle="tooltip"
+                    data-placement="right" title="Wishlist" appClick (click)="addToWishlist()"
+                    [ngClass]="{'btn-loading': addingToWishlist}">
+                    <app-icon name="wishlist-16" size="16"></app-icon>
+                </button>
+                <button type="button" class="btn btn-sm btn-light btn-svg-icon" data-toggle="tooltip"
+                    data-placement="right" title="Compare" appClick (click)="addToCompare()"
+                    [ngClass]="{'btn-loading': addingToCompare}">
+                    <app-icon name="compare-16" size="16"></app-icon>
+                </button>
+            </div>
+            <h1 class="product__name">{{ product.Label }}</h1>
+            <div class="product__rating" *ngIf="!hideRatingModule">
+                <div class="product__rating-stars">
+                    <app-rating [value]="storeService.calculCommentAverageNote(product.Comments)"></app-rating>
+                </div>
+                <div class="product__rating-legend">
+                    <a href="" appClick *ngIf="product.Comments!=null && product.Comments.length >0">{{
+                        product.Comments.length }} {{'product.Reviews' | translate}}</a><span>/</span>
+                    <a href="" appClick>{{'product.WriteAReview' | translate}}</a>
+                </div>
+            </div>
+            <div class="product__description">
+                {{ product.Description}}
+            </div>
+
+            <ul class="product__meta">
+                <li class="product__meta-availability">{{'product.Availability' | translate}}: <span
+                        class="text-success">{{'product.InStock' | translate}}</span></li>
+                <li><span style="font-weight: bold;">{{'product.reference' | translate}}:
+                        {{product.ReferenceCode}}</span> </li>
+            </ul>
+        </div>
+        <!-- .product__info / end -->
+        <!-- .product__sidebar -->
+        <div class="product__sidebar">
+            <div class="product__availability">
+                {{'product.Availability' | translate}}: <span class="text-success">{{'product.InStock' |
+                    translate}}</span>
+            </div>
+
+            <div class="product__prices" *ngIf="loginService.loginStatus|async">
+
+
+                <ng-container *ngIf="storeService.formatProductPromotionInfo(product)!=null">
+                    <span class="product-card__new-price">{{ product.Price|currencyFormat }}(HT)</span>{{ ' ' }}
+                    <span class="product-card__old-price">{{ product.PreviousPrice|currencyFormat }}(HT)</span>
+                </ng-container>
+                <ng-container *ngIf="storeService.formatProductPromotionInfo(product)==null">
+                    {{ product.Price|currencyFormat }}(HT)
+                </ng-container>
+            </div>
+            <!-- .product__options -->
+            <div class="product__options">
+                <div class="form-group product__option">
+                    <label class="product__option-label">{{'product.Color' | translate}}: </label>
+                    <p class="product_option_value">{{product.Color}} </p>
+                </div>
+                <div class="form-group product__option">
+                    <label class="product__option-label">{{'product.Material' | translate}}: </label>
+                    <p class="product_option_value">{{product.Material}} </p>
+                </div>
+                <div class="form-group product__option">
+                    <label class="product__option-label">{{'product.Size' | translate}}: </label>
+                    <p class="product_option_value">{{product.Size}} </p>
+                </div>
+                <div class="form-group product__option">
+                    <label class="product__option-label">{{'product.Forme' | translate}}: </label>
+                    <p class="product_option_value">{{product.Forme}} </p>
+                </div>
+                <div class="form-group product__option">
+                    <div *ngIf="product.QuantityPerParcel==null">
+                        <label class="product__option-label"> {{'product.QuantityPerParcel'| translate}}: 
+                            {{ product.QuantityPerBox}} pcs
+                        </label>
+                    </div>
+                    <div *ngIf="product.QuantityPerParcel!=null">
+                        <p class="product__option-label"> {{'product.QuantityPerParcel'| translate}}: 
+                            {{ product.QuantityPerParcel}} pcs 
+                        </p>
+                        <p class="product__option-label"> {{'product.QuantityPerBox'| translate}}: 
+                            {{ product.QuantityPerBox}} pcs
+                        </p>
+                    </div>
+   
+                    <div class="product__actions">
+                        <div class="product__actions-item">
+                            <app-input-number aria-label="Quantity" class="product__quantity" size="lg"
+                                [min]="product.MinQuantity" [(ngModel)]="quantity"></app-input-number>
+                        </div>
+              
+                        <div *ngIf="loginService.loginStatus|async"
+                            class="product__actions-item product__actions-item--wishlist">
+                            <button type="button" class="btn btn-secondary btn-svg-icon btn-lg"
+                                [ngStyle]="isAddedToWishList && {'fill': '#cc3333'}" data-toggle="tooltip"
+                                title="Wishlist" [ngClass]="{'btn-loading': addingToWishlist}" appClick
+                                (click)="addToWishlist()">
+                                <app-icon name="wishlist-16" size="16"></app-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product__actions" style="margin-top: 5%;">
+                    
+                        <div class="product__actions-item product__actions-item--addtocart" style="width: 80%;">
+                            <button type="button" class="btn btn-primary btn-lg" style="width: 100%;"
+                            [ngClass]="{'btn-loading': addingToCart}" appClick
+                            (click)="addToCart()">{{'product.Addtocart' | translate}}</button>
+                        </div>
+                        <div class="product__actions-item product__actions-item--addtocart" style="width: 80%;">
+         
+                            <button type="button" class="btn btn-primary btn-lg" style="width: 100%; background-color: white; color: red;border-color: red;"
+                                appClick (click)="returnToPreviousPage()">{{'page-cart.ContinueShopping' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+            <!-- .product__options / end -->
+        </div>
+        <!-- .product__end -->
+        <!-- <div class="product__footer">
+            <div class="product__tags tags">
+                <div class="tags__list">
+                    <a href="" appClick>Mounts</a>
+                    <a href="" appClick>Electrodes</a>
+                    <a href="" appClick>Chainsaws</a>
+                </div>
+            </div>
+
+        </div> -->
+    </div>
+</div>
