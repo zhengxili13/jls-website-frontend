@@ -18,45 +18,52 @@
     <div class="container">
         <table class="wishlist">
             <thead class="wishlist__head">
-            <tr class="wishlist__row">
-                <th class="wishlist__column wishlist__column--image">{{'page-wishlist.Image' | translate}}</th>
-                <th class="wishlist__column wishlist__column--product">{{'page-wishlist.Product' | translate}}</th>
-                <th class="wishlist__column wishlist__column--stock">{{'page-wishlist.StockStatus' | translate}}</th>
-                <th class="wishlist__column wishlist__column--stock">{{'product.QuantityPerBox' | translate}}</th>
-                <th class="wishlist__column wishlist__column--price">{{'page-wishlist.Price' | translate}}</th>
-                <th class="wishlist__column wishlist__column--tocart"></th>
-                <th class="wishlist__column wishlist__column--remove"></th>
-            </tr>
+                <tr class="wishlist__row">
+                    <th class="wishlist__column wishlist__column--image">{{'page-wishlist.Image' | translate}}</th>
+                    <th class="wishlist__column wishlist__column--product">{{'page-wishlist.Product' | translate}}</th>
+                    <th class="wishlist__column wishlist__column--stock">{{'page-wishlist.StockStatus' | translate}}
+                    </th>
+                    <th class="wishlist__column wishlist__column--stock">{{'product.QuantityPerBox' | translate}}</th>
+                    <th class="wishlist__column wishlist__column--price">{{'page-wishlist.Price' | translate}}</th>
+                    <th class="wishlist__column wishlist__column--tocart"></th>
+                    <th class="wishlist__column wishlist__column--remove"></th>
+                </tr>
             </thead>
             <tbody class="wishlist__body">
-            <tr *ngFor="let product of favoirteList" class="wishlist__row">
-                <td class="wishlist__column wishlist__column--image">
-                    <a  *ngIf="product.DefaultPhotoPath" [routerLink]="['/shop/products']" [queryParams]="{ProductId: product.ProductId }"><img [src]="host+product.DefaultPhotoPath" alt=""></a>
-                </td>
-                <td class="wishlist__column wishlist__column--product">
-                    <a  class="wishlist__product-name" [routerLink]="['/shop/products']" [queryParams]="{ProductId: product.ProductId }">{{ product.Label }}</a>
-                    <div class="wishlist__product-rating" *ngIf="!hideRatingModule">
-                        <app-rating [value]="storeService.calculCommentAverageNote(product.Comments)"></app-rating>
-                        <div class="wishlist__product-rating-legend">{{ product.Comments.length }} {{'page-wishlist.Reviews' | translate}}</div>
-                    </div>
-                </td>
-                <td class="wishlist__column wishlist__column--stock">
-                    <div class="badge badge-success">{{'page-wishlist.InStock' | translate}}</div>
-                </td>
-                
-                <td class="wishlist__column wishlist__column--stock">{{ product.QuantityPerBox }}</td>
-                <td class="wishlist__column wishlist__column--price">{{ product.Price|currencyFormat }}(HT)</td>
-                <td class="wishlist__column wishlist__column--tocart">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="addToCart(product)" [ngClass]="{'btn-loading': addingToCart}" >{{'page-wishlist.AddToCart' | translate}}</button>
-                </td>
-                <td class="wishlist__column wishlist__column--remove">
-                    <button type="button" class="btn btn-light btn-sm btn-svg-icon" (click)="remove(product)" [ngClass]="{'btn-loading': removingFromWishList}" > 
-                        <!-- [ngClass]="{'btn-loading': removedProducts.includes(product)}"
+                <tr *ngFor="let product of favoirteList" class="wishlist__row">
+                    <td class="wishlist__column wishlist__column--image">
+                        <a *ngIf="product.DefaultPhotoPath" [routerLink]="['/shop/products']"
+                            [queryParams]="{ProductId: product.ProductId }"><img [src]="product.DefaultPhotoPath"
+                                alt=""></a>
+                    </td>
+                    <td class="wishlist__column wishlist__column--product">
+                        <a class="wishlist__product-name" [routerLink]="['/shop/products']"
+                            [queryParams]="{ProductId: product.ProductId }">{{ product.Label }}</a>
+                        <div class="wishlist__product-rating" *ngIf="!hideRatingModule">
+                            <app-rating [value]="storeService.calculCommentAverageNote(product.Comments)"></app-rating>
+                            <div class="wishlist__product-rating-legend">{{ product.Comments.length }}
+                                {{'page-wishlist.Reviews' | translate}}</div>
+                        </div>
+                    </td>
+                    <td class="wishlist__column wishlist__column--stock">
+                        <div class="badge badge-success">{{'page-wishlist.InStock' | translate}}</div>
+                    </td>
+
+                    <td class="wishlist__column wishlist__column--stock">{{ product.QuantityPerBox }}</td>
+                    <td class="wishlist__column wishlist__column--price">{{ product.Price|currencyFormat }}(HT)</td>
+                    <td class="wishlist__column wishlist__column--tocart">
+                        <button type="button" class="btn btn-primary btn-sm" (click)="addToCart(product)"
+                            [ngClass]="{'btn-loading': addingToCart}">{{'page-wishlist.AddToCart' | translate}}</button>
+                    </td>
+                    <td class="wishlist__column wishlist__column--remove">
+                        <button type="button" class="btn btn-light btn-sm btn-svg-icon" (click)="remove(product)"
+                            [ngClass]="{'btn-loading': removingFromWishList}">
+                            <!-- [ngClass]="{'btn-loading': removedProducts.includes(product)}"
                         [ngClass]="{'btn-loading': addedToCartProducts.includes(product)} -->
-                        <app-icon name="cross-12" size="12"></app-icon>
-                    </button>
-                </td>
-            </tr>
+                            <app-icon name="cross-12" size="12"></app-icon>
+                        </button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

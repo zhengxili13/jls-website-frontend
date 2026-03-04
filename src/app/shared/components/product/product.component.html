@@ -22,9 +22,9 @@
                                     {{ 'products-view.New' | translate }}
                                 </div>
                             </div>
-                            <a appClick (click)="openPhotoSwipe($event, image);" [href]="host + image.Path"
+                            <a appClick (click)="openPhotoSwipe($event, image);" [href]="image.Path"
                                 target="_blank">
-                                <img [src]="host + image.Path" alt="" #imageElement>
+                                <img [src]="image.Path" alt="" #imageElement>
                             </a>
                         </ng-template>
                     </owl-carousel-o>
@@ -36,7 +36,7 @@
                             <span class="product-gallery__carousel-item"
                                 [ngClass]="{'product-gallery__carousel-item--active': image.active}" appClick
                                 (click)="featuredCarousel.to(image.Id.toString()); setActiveImage(image)">
-                                <img class="product-gallery__carousel-image" [src]="host + image.Path" alt="">
+                                <img class="product-gallery__carousel-image" [src]="image.Path" alt="">
                             </span>
                         </ng-template>
                         <ng-template *ngFor="let i of fakeSlides.slides" carouselSlide [id]="'fake-slide-'+i">

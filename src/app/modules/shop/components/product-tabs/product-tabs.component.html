@@ -19,7 +19,7 @@
                 <h3 class="spec__header">{{'product-tabs.Specification' | translate}}</h3>
            
                     <h4 class="spec__section-title">{{'product-tabs.Generalinformation' | translate}}</h4>
-                    <div *ngFor="let info of getInformationList()" class="spec__row">
+                    <div *ngFor="let info of informationList" class="spec__row">
                         <div class="spec__name">{{ info.Label }}</div>
                         <div class="spec__value">{{ info.Value }}</div>
                     </div>

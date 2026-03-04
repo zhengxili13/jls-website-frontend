@@ -37,7 +37,7 @@
     "Msg_ReLogin": "Vous êtes déconnecté, essayez de vous reconnecter",
     "Leave": "Quitter?",
     "Yes": "Oui",
-    "CopyOrderTitle":"Acheter à nouveau",
+    "CopyOrderTitle": "Acheter à nouveau",
     "CopyOrder": "Est-ce que vous voulez rajouter les produits de cette commande dans le panier?",
     "No": "Non",
     "imcomplete": "Les informations sont incomplètes, veuillez les remplir à nouveau",
@@ -58,6 +58,7 @@
         "Email": "E-mail",
         "Warming_PleaseEntreCorrectEmail": "Adresse e-mail non valide.",
         "Password": "Mot de passe",
+        "ConfirmPassword": "Confirmer le mot de passe",
         "Warming_PasswordsMustMatch": "Les mots de passe ne correspondent pas",
         "CompanyInformation": "Informations sur la société",
         "CompanyName": "Nom de la société",
@@ -174,7 +175,7 @@
         "CalculateShipping": "Frais de livraison",
         "Proceedtocheckout": "Passer au paiement",
         "CouponCode": "Code de coupon",
-        "TotalQuantity":"QT.Total"
+        "TotalQuantity": "QT.Total"
     },
     "page-checkout": {
         "SameAddress": "Utiliser même addresse pour facturation",
@@ -302,7 +303,7 @@
         "ResetPassword": "Réinitialiser le mot de passe"
     },
     "page-chat": {
-        "Title":"Assistance en ligne",
+        "Title": "Assistance en ligne",
         "Send": "Envoyer",
         "SendAMessage": "Envoyer un message"
     },

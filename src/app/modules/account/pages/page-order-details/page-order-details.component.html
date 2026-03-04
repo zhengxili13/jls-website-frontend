@@ -35,7 +35,7 @@
                     <tr *ngFor="let item of order.ProductList">
                         <td>
                             <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.ProductId }">
-                                <img [src]="host + item.DefaultPhotoPath" alt="" style="width: 80px;">
+                                <img [src]="item.DefaultPhotoPath" alt="" style="width: 80px;">
                             </a>
                         </td>
                         <td>

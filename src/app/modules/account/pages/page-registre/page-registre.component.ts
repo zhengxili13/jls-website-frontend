@@ -5,8 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { UserService } from 'src/app/shared/api/user.service';
 import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
-import { distinctUntilChanged, debounceTime, switchMap, map, first } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { distinctUntilChanged, debounceTime, switchMap, map, first, take } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
 
 @Component({
     selector: 'app-registre',
@@ -64,12 +64,13 @@ export class PageRegistreComponent implements OnInit {
 
     userNameUniqueValidator() {
         return (control: FormControl): Observable<any> => {
-            return control.valueChanges.pipe(
-                distinctUntilChanged(),
-                debounceTime(1000),
+            if (!control.value) {
+                return of(null);
+            }
+            return timer(500).pipe(
                 switchMap(() => this.userService.CheckUserIsAlreadyExistAsync({ Username: control.value })),
                 map(res => res === true ? { duplicate: true } : null),
-                first()
+                take(1)
             );
         };
     }

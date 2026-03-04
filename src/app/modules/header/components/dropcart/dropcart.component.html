@@ -9,7 +9,7 @@
                 <div class="dropcart__product-image">
                     <a [routerLink]="['/shop/products']" [queryParams]="{ProductId: item.product.ProductId }"
                         *ngIf="item.product.DefaultPhotoPath" (click)="closeMenu.emit()">
-                        <img [src]="host+item.product.DefaultPhotoPath" alt="">
+                        <img [src]="item.product.DefaultPhotoPath" alt="">
                     </a>
                 </div>
                 <div class="dropcart__product-info">
@@ -23,10 +23,13 @@
                     </ul> -->
                     <div class="dropcart__product-meta">
                         <span class="dropcart__product-quantity">{{ item.quantity }}</span> ×
-                        <span class="dropcart__product-quantity">{{ item.product.QuantityPerBox }}</span> 
-                        <span *ngIf="loginService.loginStatus|async" class="dropcart__product-price">× {{ item.product.Price|currencyFormat }}</span>
+                        <span class="dropcart__product-quantity">{{ item.product.QuantityPerBox }}</span>
+                        <span *ngIf="loginService.loginStatus|async" class="dropcart__product-price">× {{
+                            item.product.Price|currencyFormat }}</span>
 
-                        <span *ngIf="loginService.loginStatus|async" class="dropcart__product-price" style="float:right">{{ item.product.Price * item.product.QuantityPerBox* item.quantity|currencyFormat }}</span>
+                        <span *ngIf="loginService.loginStatus|async" class="dropcart__product-price"
+                            style="float:right">{{ item.product.Price * item.product.QuantityPerBox*
+                            item.quantity|currencyFormat }}</span>
                     </div>
                 </div>
 
@@ -45,7 +48,7 @@
                 </tr>
                 <tr *ngFor="let total of cart.totals$|async">
                     <th>{{ total.title | translate }}</th>
-                    <td *ngIf="total.type!='shipping'">{{ total.price|currencyFormat  }}</td>
+                    <td *ngIf="total.type!='shipping'">{{ total.price|currencyFormat }}</td>
                     <td *ngIf="total.type =='shipping'">{{'dropcart.Aestimer' | translate}} </td>
                 </tr>
                 <tr>
@@ -56,10 +59,10 @@
         </div>
 
         <div class="dropcart__buttons">
-            <a class="btn btn-secondary" [routerLink]="root.cart()"
-                (click)="closeMenu.emit()">{{'dropcart.ViewCart' | translate}}</a>
-            <a class="btn btn-primary" [routerLink]="root.checkout()"
-                (click)="closeMenu.emit()">{{'dropcart.Checkout' | translate}}</a>
+            <a class="btn btn-secondary" [routerLink]="root.cart()" (click)="closeMenu.emit()">{{'dropcart.ViewCart' |
+                translate}}</a>
+            <a class="btn btn-primary" [routerLink]="root.checkout()" (click)="closeMenu.emit()">{{'dropcart.Checkout' |
+                translate}}</a>
         </div>
     </ng-container>
 </div>

@@ -13,12 +13,18 @@ export class ProductTabsComponent implements OnInit {
 
     hideRatingModule = environment.hideRatingModule;
 
-    private dataProduct: ProductDetail1;
-
+    private _product: ProductDetail1;
+    public informationList: any[] = [];
     @Input() withSidebar = false;
     @Input() tab: 'description' | 'specification' | 'reviews' = 'description';
 
-    @Input() product;
+    @Input() set product(value: ProductDetail1) {
+        this._product = value;
+        this.updateInformationList();
+    }
+    get product(): ProductDetail1 {
+        return this._product;
+    }
 
     constructor(public translateService: TranslateService) {
     }
@@ -26,9 +32,13 @@ export class ProductTabsComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    getInformationList() {
+    updateInformationList() {
+        if (!this.product) {
+            this.informationList = [];
+            return;
+        }
         let list = [];
-        Object.keys(this.product).map(key => {
+        Object.keys(this.product).forEach(key => {
             switch (key) {
                 case 'MainCategoryLabel':
                     list.push({
@@ -111,6 +121,6 @@ export class ProductTabsComponent implements OnInit {
                     break;
             }
         });
-        return list.sort((a,b)=>a.Order-b.Order);
+        this.informationList = list.sort((a, b) => a.Order - b.Order);
     }
 }

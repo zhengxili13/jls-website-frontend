@@ -5,133 +5,197 @@
 
 <div class="block">
     <div class="container">
-        <div class="row">
-            <div class="card flex-grow-1 mb-md-0">
-                <div class="card-body">
-                    <h3 class="card-title">{{'page-login.Register' | translate}}</h3>
-                    <mat-horizontal-stepper linear=true #stepper="matHorizontalStepper">
-                        <mat-step [stepControl]="basicInfoForm">
-                            <form [formGroup]="basicInfoForm">
-                                <ng-template matStepLabel>{{'registre.Compte' | translate}}</ng-template>
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.Email' | translate}}"
-                                        formControlName="email" required>
-                                    <mat-error *ngIf="isAlreadyExists()">
-                                        {{'registre.Error_UserAlreadyExists' | translate}}
-                                    </mat-error>
-                                    <mat-error *ngIf="basicInfoFormCtrl.email.errors && !isAlreadyExists()">
-                                        {{'registre.Warming_PleaseEntreCorrectEmail' | translate}}
-                                    </mat-error>
-                                </mat-form-field>
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-8">
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">{{'page-login.Register' | translate}}</h3>
 
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.Password' | translate}}"
-                                        formControlName="password" required type="password">
-                                    <mat-error *ngIf="basicInfoFormCtrl.password.errors">
-                                        {{'registre.Warming_AtLeast8Characters' | translate}}
-                                    </mat-error>
-                                </mat-form-field>
+                        <mat-horizontal-stepper linear="true" #stepper="matHorizontalStepper">
+                            <!-- Step 1: Compte -->
+                            <mat-step [stepControl]="basicInfoForm">
+                                <form [formGroup]="basicInfoForm">
+                                    <ng-template matStepLabel>{{'registre.Compte' | translate}}</ng-template>
 
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.Password' | translate}}"
-                                        formControlName="confirmPassword" required type="password">
-                                </mat-form-field>
-                                <div *ngIf="confirmPassword()" style="color: red; margin-bottom: 7px;">
-                                    {{'registre.Warming_PasswordsMustMatch' | translate}}
-                                </div>
-                                <div>
-                                    <button mat-raised-button color="primary"
-                                        matStepperNext>{{'registre.Next' | translate}}</button>
-                                </div>
-                            </form>
-                        </mat-step>
-                        <mat-step [stepControl]="entrepriseForm">
-                            <form [formGroup]="entrepriseForm">
-                                <ng-template matStepLabel>{{'registre.Entreprise' | translate}}</ng-template>
+                                    <div class="form-group mt-4">
+                                        <label for="registre-email">{{'registre.Email' | translate}} <span
+                                                class="text-danger">*</span></label>
+                                        <input type="email" id="registre-email" class="form-control"
+                                            [ngClass]="{'is-invalid': basicInfoFormCtrl.email.invalid && (basicInfoFormCtrl.email.dirty || basicInfoFormCtrl.email.touched)}"
+                                            formControlName="email" placeholder="{{'registre.Email' | translate}}">
 
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.CompanyName' | translate}}"
-                                        formControlName="entrepriseName" required>
-                                </mat-form-field>
-
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.Siret' | translate}}"
-                                        formControlName="siret" required>
-                                </mat-form-field>
-
-                                <mat-form-field>
-                                    <mat-label>{{'registre.PhoneNumber' | translate}}</mat-label>
-                                    <input matInput required type="tel" matInput placeholder="EX: +33 xx xx xx xx xx"
-                                        formControlName="phoneNumber">
-                                </mat-form-field>
-                                <div>
-                                    <button mat-raised-button color="warn"
-                                        matStepperPrevious>{{'registre.Back' | translate}}</button>
-                                    <button mat-raised-button color="primary"
-                                        matStepperNext>{{'registre.Next' | translate}}</button>
-                                </div>
-                            </form>
-                        </mat-step>
-                        <mat-step [stepControl]="addressForm">
-                            <form [formGroup]="addressForm">
-                                <ng-template matStepLabel>{{'registre.Address' | translate}}</ng-template>
-
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.AddressLine1' | translate}}"
-                                        formControlName="FirstLineAddress" required>
-                                </mat-form-field>
-
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'registre.AddressLine2' | translate}}"
-                                        formControlName="SecondLineAddress">
-                                </mat-form-field>
-
-
-                                <div class="row">
-
-                                    <div class="col-md-4">
-                                        <mat-form-field>
-                                            <input matInput placeholder="{{'registre.ZipCode' | translate}}"
-                                                formControlName="ZipCode" required>
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <mat-form-field>
-                                            <input matInput placeholder="{{'registre.City' | translate}}"
-                                                formControlName="City" required>
-                                        </mat-form-field>
+                                        <div class="invalid-feedback" *ngIf="isAlreadyExists()">
+                                            {{'registre.Error_UserAlreadyExists' | translate}}
+                                        </div>
+                                        <div class="invalid-feedback"
+                                            *ngIf="basicInfoFormCtrl.email.errors?.required && !isAlreadyExists()">
+                                            {{'page-checkout.Emailaddress' | translate}} {{'required' | translate}}
+                                        </div>
+                                        <div class="invalid-feedback"
+                                            *ngIf="basicInfoFormCtrl.email.errors?.email && !isAlreadyExists()">
+                                            {{'registre.Warming_PleaseEntreCorrectEmail' | translate}}
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <mat-form-field>
-                                            <input matInput placeholder="{{'registre.Country' | translate}}"
-                                                formControlName="Country" required>
-                                        </mat-form-field>
+                                    <div class="form-group">
+                                        <label for="registre-password">{{'registre.Password' | translate}} <span
+                                                class="text-danger">*</span></label>
+                                        <input type="password" id="registre-password" class="form-control"
+                                            [ngClass]="{'is-invalid': basicInfoFormCtrl.password.invalid && (basicInfoFormCtrl.password.dirty || basicInfoFormCtrl.password.touched)}"
+                                            formControlName="password"
+                                            placeholder="{{'registre.Password' | translate}}">
+                                        <div class="invalid-feedback" *ngIf="basicInfoFormCtrl.password.errors">
+                                            {{'registre.Warming_AtLeast8Characters' | translate}}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <mat-form-field>
-                                    <mat-label>{{'registre.PhoneNumber' | translate}} </mat-label>
-                                    <input matInput required type="tel" matInput placeholder="EX: +33 xx xx xx xx xx"
-                                        formControlName="ContactTelephone">
-                                </mat-form-field>
+                                    <div class="form-group">
+                                        <label for="registre-confirm-password">{{'registre.ConfirmPassword' |
+                                            translate}} <span class="text-danger">*</span></label>
+                                        <input type="password" id="registre-confirm-password" class="form-control"
+                                            [ngClass]="{'is-invalid': confirmPassword() && (basicInfoFormCtrl.confirmPassword.dirty || basicInfoFormCtrl.confirmPassword.touched)}"
+                                            formControlName="confirmPassword"
+                                            placeholder="{{'registre.ConfirmPassword' | translate}}">
+                                        <div class="invalid-feedback"
+                                            *ngIf="confirmPassword() && (basicInfoFormCtrl.confirmPassword.dirty || basicInfoFormCtrl.confirmPassword.touched)">
+                                            {{'registre.Warming_PasswordsMustMatch' | translate}}
+                                        </div>
+                                    </div>
 
-                                <mat-form-field>
-                                    <mat-label>{{'registre.Fax' | translate}}</mat-label>
-                                    <input matInput type="tel" matInput placeholder="EX: +33 xx xx xx xx xx"
-                                        formControlName="ContactFax">
-                                </mat-form-field>
+                                    <div class="mt-4">
+                                        <button type="button" class="btn btn-primary btn-lg btn-block"
+                                            (click)="basicInfoForm.markAllAsTouched()" matStepperNext>{{'registre.Next'
+                                            | translate}}</button>
+                                    </div>
+                                </form>
+                            </mat-step>
 
+                            <!-- Step 2: Entreprise -->
+                            <mat-step [stepControl]="entrepriseForm">
+                                <form [formGroup]="entrepriseForm">
+                                    <ng-template matStepLabel>{{'registre.Entreprise' | translate}}</ng-template>
 
-                                <div>
-                                    <button mat-raised-button color="warn"
-                                        matStepperPrevious>{{'registre.Back' | translate}}</button>
-                                    <button mat-raised-button color="primary"
-                                        (click)='registre()'>{{'registre.Registre' | translate}}</button>
-                                </div>
-                            </form>
-                        </mat-step>
-                    </mat-horizontal-stepper>
+                                    <div class="form-group mt-4">
+                                        <label>{{'registre.CompanyName' | translate}} <span
+                                                class="text-danger">*</span></label>
+                                        <input class="form-control"
+                                            [ngClass]="{'is-invalid': entrepriseFormCtrl.entrepriseName.invalid && (entrepriseFormCtrl.entrepriseName.dirty || entrepriseFormCtrl.entrepriseName.touched)}"
+                                            formControlName="entrepriseName"
+                                            placeholder="{{'registre.CompanyName' | translate}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>{{'registre.Siret' | translate}} <span
+                                                class="text-danger">*</span></label>
+                                        <input class="form-control"
+                                            [ngClass]="{'is-invalid': entrepriseFormCtrl.siret.invalid && (entrepriseFormCtrl.siret.dirty || entrepriseFormCtrl.siret.touched)}"
+                                            formControlName="siret" placeholder="{{'registre.Siret' | translate}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>{{'registre.PhoneNumber' | translate}} <span
+                                                class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control"
+                                            [ngClass]="{'is-invalid': entrepriseFormCtrl.phoneNumber.invalid && (entrepriseFormCtrl.phoneNumber.dirty || entrepriseFormCtrl.phoneNumber.touched)}"
+                                            formControlName="phoneNumber" placeholder="EX: +33 xx xx xx xx xx">
+                                    </div>
+
+                                    <div class="mt-4 d-flex">
+                                        <button type="button" class="btn btn-secondary mr-2"
+                                            matStepperPrevious>{{'registre.Back' |
+                                            translate}}</button>
+                                        <button type="button" class="btn btn-primary flex-grow-1"
+                                            (click)="entrepriseForm.markAllAsTouched()" matStepperNext>{{'registre.Next'
+                                            |
+                                            translate}}</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+
+                            <!-- Step 3: Adresse -->
+                            <mat-step [stepControl]="addressForm">
+                                <form [formGroup]="addressForm">
+                                    <ng-template matStepLabel>{{'registre.Address' | translate}}</ng-template>
+
+                                    <div class="form-group mt-4">
+                                        <label>{{'registre.AddressLine1' | translate}} <span
+                                                class="text-danger">*</span></label>
+                                        <input class="form-control"
+                                            [ngClass]="{'is-invalid': addressFormCtrl.FirstLineAddress.invalid && (addressFormCtrl.FirstLineAddress.dirty || addressFormCtrl.FirstLineAddress.touched)}"
+                                            formControlName="FirstLineAddress"
+                                            placeholder="{{'registre.AddressLine1' | translate}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>{{'registre.AddressLine2' | translate}}</label>
+                                        <input class="form-control" formControlName="SecondLineAddress"
+                                            placeholder="{{'registre.AddressLine2' | translate}}">
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>{{'registre.ZipCode' | translate}} <span
+                                                        class="text-danger">*</span></label>
+                                                <input class="form-control"
+                                                    [ngClass]="{'is-invalid': addressFormCtrl.ZipCode.invalid && (addressFormCtrl.ZipCode.dirty || addressFormCtrl.ZipCode.touched)}"
+                                                    formControlName="ZipCode"
+                                                    placeholder="{{'registre.ZipCode' | translate}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>{{'registre.City' | translate}} <span
+                                                        class="text-danger">*</span></label>
+                                                <input class="form-control"
+                                                    [ngClass]="{'is-invalid': addressFormCtrl.City.invalid && (addressFormCtrl.City.dirty || addressFormCtrl.City.touched)}"
+                                                    formControlName="City"
+                                                    placeholder="{{'registre.City' | translate}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>{{'registre.Country' | translate}} <span
+                                                        class="text-danger">*</span></label>
+                                                <input class="form-control"
+                                                    [ngClass]="{'is-invalid': addressFormCtrl.Country.invalid && (addressFormCtrl.Country.dirty || addressFormCtrl.Country.touched)}"
+                                                    formControlName="Country"
+                                                    placeholder="{{'registre.Country' | translate}}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>{{'registre.PhoneNumber' | translate}} <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="tel" class="form-control"
+                                                    [ngClass]="{'is-invalid': addressFormCtrl.ContactTelephone.invalid && (addressFormCtrl.ContactTelephone.dirty || addressFormCtrl.ContactTelephone.touched)}"
+                                                    formControlName="ContactTelephone"
+                                                    placeholder="EX: +33 xx xx xx xx xx">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>{{'registre.Fax' | translate}}</label>
+                                                <input type="tel" class="form-control" formControlName="ContactFax"
+                                                    placeholder="Fax">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4 d-flex">
+                                        <button type="button" class="btn btn-secondary mr-2"
+                                            matStepperPrevious>{{'registre.Back' |
+                                            translate}}</button>
+                                        <button type="button" class="btn btn-primary flex-grow-1"
+                                            (click)="registre()">{{'registre.Registre' | translate}}</button>
+                                    </div>
+                                </form>
+                            </mat-step>
+                        </mat-horizontal-stepper>
+                    </div>
                 </div>
             </div>
         </div>

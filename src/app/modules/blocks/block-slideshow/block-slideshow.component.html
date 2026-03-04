@@ -11,8 +11,6 @@
                                 <div class="block-slideshow__slide-image block-slideshow__slide-image--desktop" [ngStyle]="{'background-image': 'url('+(withDepartments ? slide.PhotoPath : slide.PhotoPath)+')'}"></div>
                                 <div class="block-slideshow__slide-image block-slideshow__slide-image--mobile" [ngStyle]="{'background-image': 'url('+slide.PhotoPath+')'}"></div>
                                 <div class="block-slideshow__slide-content">
-                                    <div class="block-slideshow__slide-title" [innerHTML]="sanitizer.bypassSecurityTrustHtml(slide.Title)"></div>
-                                    <div class="block-slideshow__slide-text" [innerHTML]="sanitizer.bypassSecurityTrustHtml(slide.Body)"></div>
                                     <div class="block-slideshow__slide-button">
                                         <span class="btn btn-primary btn-lg">Shop Now</span>
                                     </div>

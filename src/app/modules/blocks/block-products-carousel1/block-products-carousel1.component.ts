@@ -10,7 +10,7 @@ import { DirectionService } from '../../../shared/services/direction.service';
 })
 export class BlockProductsCarousel1Component implements OnChanges {
     @Input() header: string;
-    @Input() layout: 'grid-4'|'grid-4-sm'|'grid-5'|'horizontal' = 'grid-4';
+    @Input() layout: 'grid-4' | 'grid-4-sm' | 'grid-5' | 'horizontal' = 'grid-4';
     @Input() rows = 1;
     @Input() products: Product1[] = [];
     @Input() groups: BlockHeaderGroup[] = [];
@@ -34,43 +34,48 @@ export class BlockProductsCarousel1Component implements OnChanges {
     carouselOptionsByLayout: any = {
         'grid-4': {
             responsive: {
-                1110: {items: 4, margin: 14},
-                930:  {items: 4, margin: 10},
-                690:  {items: 3, margin: 10},
-                400:  {items: 2, margin: 10},
-                0:    {items: 1}
+                1110: { items: 4, margin: 14 },
+                930: { items: 4, margin: 10 },
+                690: { items: 3, margin: 10 },
+                400: { items: 2, margin: 10 },
+                0: { items: 1 }
             }
         },
         'grid-4-sm': {
             responsive: {
-                820: {items: 4, margin: 14},
-                640: {items: 3, margin: 10},
-                400: {items: 2, margin: 10},
-                0:   {items: 1}
+                820: { items: 4, margin: 14 },
+                640: { items: 3, margin: 10 },
+                400: { items: 2, margin: 10 },
+                0: { items: 1 }
             }
         },
         'grid-5': {
             responsive: {
-                1110: {items: 5, margin: 12},
-                930:  {items: 4, margin: 10},
-                690:  {items: 3, margin: 10},
-                400:  {items: 2, margin: 10},
-                0:    {items: 1}
+                1110: { items: 5, margin: 12 },
+                930: { items: 4, margin: 10 },
+                690: { items: 3, margin: 10 },
+                400: { items: 2, margin: 10 },
+                0: { items: 1 }
             }
         },
         horizontal: {
             items: 3,
             responsive: {
-                1110: {items: 3, margin: 14},
-                930:  {items: 3, margin: 10},
-                690:  {items: 2, margin: 10},
-                0:    {items: 1}
+                1110: { items: 3, margin: 14 },
+                930: { items: 3, margin: 10 },
+                690: { items: 2, margin: 10 },
+                0: { items: 1 }
             }
         }
     };
 
+    private _carouselOptions: any;
+
     get carouselOptions(): any {
-        return Object.assign({}, this.carouselDefaultOptions, this.carouselOptionsByLayout[this.layout]);
+        if (!this._carouselOptions) {
+            this._carouselOptions = Object.assign({}, this.carouselDefaultOptions, this.carouselOptionsByLayout[this.layout]);
+        }
+        return this._carouselOptions;
     }
 
     constructor(
@@ -78,16 +83,14 @@ export class BlockProductsCarousel1Component implements OnChanges {
     ) { }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const properties = Object.keys(changes);
-
-        if (properties.includes('products') || properties.includes('row')) {
+        if (changes['products'] || changes['rows'] || changes['layout']) {
             this.columns = [];
+            this._carouselOptions = null; // Reset options when layout changes
 
-            if (this.products && this.rows > 0) {
-                const products = this.products.slice();
-
-                while (products.length > 0) {
-                    this.columns.push(products.splice(0, this.rows));
+            if (this.products && Array.isArray(this.products)) {
+                const rows = Math.max(1, Number(this.rows) || 1);
+                for (let i = 0; i < this.products.length; i += rows) {
+                    this.columns.push(this.products.slice(i, i + rows));
                 }
             }
         }
