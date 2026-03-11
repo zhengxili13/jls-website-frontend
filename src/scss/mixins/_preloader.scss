@@ -6,6 +6,7 @@
         from {
             transform: rotateZ(0deg);
         }
+
         to {
             transform: rotateZ(360deg);
         }
@@ -13,11 +14,11 @@
 }
 
 @mixin preloader-size($size) {
-    left: calc(50% - #{$size / 2});
-    top: calc(50% - #{$size / 2});
+    left: calc(50% - #{$size} / 2);
+    top: calc(50% - #{$size} / 2);
     width: $size;
     height: $size;
-    border-radius: $size / 2;
+    border-radius: calc(#{$size} / 2);
 }
 
 
@@ -33,7 +34,7 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 
-    @if ($size != null) {
+    @if ($size !=null) {
         @include preloader-size($size);
     }
 }

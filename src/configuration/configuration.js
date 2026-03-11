@@ -1,3 +1,3 @@
 Configuration = {
-    SERVER_API_URL: "https://www.jlsimport.fr/"
+    SERVER_API_URL: "https://localhost:49631/"
 }

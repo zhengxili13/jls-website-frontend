@@ -11,7 +11,10 @@
     "dev:ssr": "ng run stroyka:serve-ssr",
     "serve:ssr": "node dist/stroyka/server/main.js",
     "build:ssr": "ng build && ng run stroyka:server",
-    "prerender": "ng run stroyka:prerender"
+    "prerender": "ng run stroyka:prerender",
+    "deploy": "bun run build && wrangler deploy",
+    "preview": "bun run build && wrangler dev",
+    "cf-typegen": "wrangler types"
   },
   "browser": {
     "crypto": false
@@ -67,6 +70,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "svg-sprite": "^2.0.2",
-    "typescript": "~5.2.0"
+    "typescript": "~5.2.0",
+    "wrangler": "^3.107.2"
   }
 }
