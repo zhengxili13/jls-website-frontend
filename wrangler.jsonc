@@ -2,14 +2,9 @@
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "jls-website-frontend",
     "compatibility_date": "2025-03-10",
-    "main": "dist/stroyka/server/main.js",
     "assets": {
-        "binding": "ASSETS",
         "directory": "dist/stroyka/browser"
     },
-    "compatibility_flags": [
-        "nodejs_compat"
-    ],
     "observability": {
         "enabled": true
     }

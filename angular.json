@@ -27,6 +27,7 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
+              "src/_redirects",
               "src/assets",
               "src/configuration",
               {
@@ -63,6 +64,7 @@
               ],
               "assets": [
                 "src/favicon.ico",
+                "src/_redirects",
                 "src/assets",
                 {
                   "glob": "**/*",

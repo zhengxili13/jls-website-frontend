@@ -10,7 +10,7 @@ $local-handle-inner-size: 6px;
 
 .ngx-slider-custom {
     height: max($local-handle-size, $local-bar-height);
-    padding: (($local-handle-size - $local-bar-height) / 2) 0;
+    padding: calc((#{$local-handle-size} - #{$local-bar-height}) / 2) 0;
 
     .ngx-slider {
         display: block;
@@ -23,21 +23,21 @@ $local-handle-inner-size: 6px;
 
         .ngx-slider-bar {
             height: $local-bar-height;
-            border-radius: ($local-bar-height) / 2;
+            border-radius: calc(#{$local-bar-height} / 2);
         }
 
         .ngx-slider-pointer {
             width: $local-handle-size;
             height: $local-handle-size;
-            border-radius: $local-handle-size / 2;
-            top: -(($local-handle-size - $local-bar-height) / 2);
+            border-radius: calc(#{$local-handle-size} / 2);
+            top: calc(-1 * (#{$local-handle-size} - #{$local-bar-height}) / 2);
 
             &::after {
                 width: $local-handle-inner-size;
                 height: $local-handle-inner-size;
-                border-radius: $local-handle-inner-size / 2;
-                top: ($local-handle-size / 2 - $local-handle-inner-size / 2);
-                left: ($local-handle-size / 2 - $local-handle-inner-size / 2);
+                border-radius: calc(#{$local-handle-inner-size} / 2);
+                top: calc(#{$local-handle-size} / 2 - #{$local-handle-inner-size} / 2);
+                left: calc(#{$local-handle-size} / 2 - #{$local-handle-inner-size} / 2);
             }
         }
 
@@ -45,9 +45,11 @@ $local-handle-inner-size: 6px;
         .ngx-slider-bar {
             background: $nouislider-bg-color;
         }
+
         .ngx-slider-selection {
             background: $nouislider-connect-color;
         }
+
         .ngx-slider-pointer,
         .ngx-slider-pointer:hover {
             cursor: ew-resize;
@@ -60,6 +62,7 @@ $local-handle-inner-size: 6px;
                 transition: transform .2s;
             }
         }
+
         .ngx-slider-pointer:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba($nouislider-border-color, .3);
