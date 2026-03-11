@@ -2,9 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "defaultProject": "stroyka",
   "projects": {
-    "stroyka": {
+    "jls-website-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -271,42 +270,42 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "stroyka:build"
+            "buildTarget": "jls-website-frontend:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "stroyka:build:production"
+              "buildTarget": "jls-website-frontend:build:production"
             },
             "theme-blue": {
-              "buildTarget": "stroyka:build:theme-blue"
+              "buildTarget": "jls-website-frontend:build:theme-blue"
             },
             "theme-blue-production": {
-              "buildTarget": "stroyka:build:theme-blue-production"
+              "buildTarget": "jls-website-frontend:build:theme-blue-production"
             },
             "theme-red": {
-              "buildTarget": "stroyka:build:theme-red"
+              "buildTarget": "jls-website-frontend:build:theme-red"
             },
             "theme-red-production": {
-              "buildTarget": "stroyka:build:theme-red-production"
+              "buildTarget": "jls-website-frontend:build:theme-red-production"
             },
             "theme-green": {
-              "buildTarget": "stroyka:build:theme-green"
+              "buildTarget": "jls-website-frontend:build:theme-green"
             },
             "theme-green-production": {
-              "buildTarget": "stroyka:build:theme-green-production"
+              "buildTarget": "jls-website-frontend:build:theme-green-production"
             },
             "theme-black": {
-              "buildTarget": "stroyka:build:theme-black"
+              "buildTarget": "jls-website-frontend:build:theme-black"
             },
             "theme-black-production": {
-              "buildTarget": "stroyka:build:theme-black-production"
+              "buildTarget": "jls-website-frontend:build:theme-black-production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "stroyka:build"
+            "buildTarget": "jls-website-frontend:build"
           }
         },
         "test": {
@@ -460,13 +459,13 @@
         "serve-ssr": {
           "builder": "@angular-devkit/build-angular:ssr-dev-server",
           "options": {
-            "browserTarget": "stroyka:build",
-            "serverTarget": "stroyka:server"
+            "browserTarget": "jls-website-frontend:build",
+            "serverTarget": "jls-website-frontend:server"
           },
           "configurations": {
             "production": {
-              "browserTarget": "stroyka:build:production",
-              "serverTarget": "stroyka:server:production"
+              "browserTarget": "jls-website-frontend:build:production",
+              "serverTarget": "jls-website-frontend:server:production"
             }
           }
         },
@@ -479,8 +478,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "stroyka:build:production",
-              "serverTarget": "stroyka:server:production"
+              "browserTarget": "jls-website-frontend:build:production",
+              "serverTarget": "jls-website-frontend:server:production"
             }
           },
           "defaultConfiguration": "production"

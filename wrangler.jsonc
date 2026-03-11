@@ -1,7 +1,7 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "jls-website-frontend",
-    "compatibility_date": "2024-05-02",
+    "compatibility_date": "2025-03-10",
     "main": "dist/stroyka/server/main.js",
     "assets": {
         "binding": "ASSETS",

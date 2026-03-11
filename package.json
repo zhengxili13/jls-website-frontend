@@ -1,5 +1,5 @@
 {
-  "name": "stroyka",
+  "name": "jls-website-frontend",
   "version": "1.10.0",
   "scripts": {
     "ng": "ng",
@@ -8,12 +8,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev:ssr": "ng run stroyka:serve-ssr",
+    "dev:ssr": "ng run jls-website-frontend:serve-ssr",
     "serve:ssr": "node dist/stroyka/server/main.js",
-    "build:ssr": "ng build && ng run stroyka:server",
-    "prerender": "ng run stroyka:prerender",
-    "deploy": "bun run build && wrangler deploy",
-    "preview": "bun run build && wrangler dev",
+    "build:ssr": "ng build && ng run jls-website-frontend:server",
+    "prerender": "ng run jls-website-frontend:prerender",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev",
     "cf-typegen": "wrangler types"
   },
   "browser": {
@@ -71,6 +71,6 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "svg-sprite": "^2.0.2",
     "typescript": "~5.2.0",
-    "wrangler": "^3.107.2"
+    "wrangler": "^4.72.0"
   }
 }
