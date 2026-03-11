@@ -13,6 +13,7 @@
     "build:ssr": "ng build && ng run jls-website-frontend:server",
     "prerender": "ng run jls-website-frontend:prerender",
     "deploy": "npm run build && wrangler deploy",
+    "deploy:uat": "ng build --configuration cloudflare-uat && wrangler deploy",
     "preview": "npm run build && wrangler dev",
     "cf-typegen": "wrangler types"
   },

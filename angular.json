@@ -99,6 +99,50 @@
                 }
               ]
             },
+            "cloudflare-uat": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.uat.ts"
+                }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/_redirects",
+                "src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/photoswipe/dist",
+                  "output": "assets/vendor/photoswipe"
+                },
+                {
+                  "glob": "{webfonts/**/*,css/all.min.css}",
+                  "input": "node_modules/@fortawesome/fontawesome-free",
+                  "output": "assets/vendor/fontawesome"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/configuration/prod",
+                  "output": "/configuration/"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
             "theme-blue": {
               "budgets": [
                 {
